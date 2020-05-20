@@ -1,0 +1,11 @@
+#Service Definition for nginx servers 
+version: "3.7"
+services: 
+    nginx:
+        image: yu-wp-nginx
+        volumes: 
+            - ngninx_log:/var/log/nginx
+            - /var/run/docker.sock:/var/run/docker.sock  #Docker Related stuff
+        
+volumes: 
+    ngninx_log:        
