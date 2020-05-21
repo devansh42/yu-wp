@@ -1,0 +1,15 @@
+version: "3.7"
+services: 
+    image: $DOCKER_REG/yu_wp_db:latest
+    ports: 
+        - "3306:3306"
+    env_file: 
+        - env.env
+    volumes: 
+        - db-data:/var/lib/mysql
+        - db-log:/var/log/mysql 
+        - wp-data:/var/wp/db
+volumes:
+    wp-data: 
+    db-data:
+    db-log:    

@@ -1,9 +1,0 @@
-version: "3.7"
-services: 
-    image: mysql:5.7
-    volumes: 
-        - db-data:/var/lib/mysql
-        - db-log:/var/log/mysql 
-volumes: 
-    db-data:
-    db-log:    

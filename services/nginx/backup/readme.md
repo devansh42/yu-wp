@@ -7,5 +7,6 @@ Service to backup wordpress site data
 |Name|Remark|
 |DO_ACCESS_KEY|DO Access key |
 |DO_SECRET_KEY| DO Secret Key|
-|DO_BUCKET|DO Bucket name|
+|DO_BUCKET|DO Bucket endpoint|
+|DO_BUCKET_NAME|DO Bucket Name|
 
