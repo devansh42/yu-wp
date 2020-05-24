@@ -16,6 +16,6 @@ while [ true ]; do
             sed "s/\$server_names/$(awk -F ";" '{print $3}' $file)/" >/etc/nginx/sites-available/$name
         ln -s /etc/nginx/conf.d/$name /etc/nginx/sites-available/$name
     done
-    #Lets update nginx about following changes
+    # Lets update nginx about following changes
     nginx -s reload
 done

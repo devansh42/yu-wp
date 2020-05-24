@@ -1,10 +1,10 @@
 #!/usr/bin/bash
-#This script backups site data
-#This script needs to situated in wp docker container
+# This script backups site data
+# This script needs to situated in wp docker container
 
 alias s3md="s3cmd --host-bucket=$DO_BUCKET --access_key=$DO_ACCESS_KEY --secret_key=$DO_SECRET_KEY "
 
-#Uasge, backup /var/www/html www.mysite.com
+# Uasge, backup /var/www/html www.mysite.com
 backup () {
     $c=$(pwd)
     cd /tmp
