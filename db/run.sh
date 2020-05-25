@@ -1,6 +1,7 @@
-#!/usr/bin/sh
-docker-entrypoint.sh #Running default entrypoint file
+#!/usr/bin/bash
 
+echo "Waiting for mysqld to start"
+sleep 30s
 #Creating necessary database
 mysql -u root -p$MYSQL_ROOT_PASSWORD <db.sql
 
@@ -10,7 +11,7 @@ fi
 
 #Registering cron job for
 if ! [ -e /etc/db-backup ]; then
-    ./backup/cron-db.sh
+    bash /backup/cron-db.sh
 fi
 
 #Making password file for backup purposes
