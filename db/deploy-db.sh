@@ -13,4 +13,4 @@ cp $t $e
         sed "s/\$DO_BUCKET/$DO_BUCKET/" $e > $t; cp $t $e
 
 #Deploying to swarm
-docker-compose -f $file up 
+docker-compose -f $file up -d
