@@ -25,4 +25,5 @@ volumes:
 
 networks:
     wp_overlay:
-        name: wp_overlay
+        external: 
+            name: wp_overlay
