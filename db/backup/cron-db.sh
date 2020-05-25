@@ -7,6 +7,6 @@ crontab -l && crontab -l > cron_dump
 	
 
 #Running cron job daily at 2 am
-echo "0 2 * * * /etc/db-backup" >> cron_dump
+echo "0 2 * * * bash /etc/db-backup /var/wp/db/names" >> cron_dump
 crontab cron_dump
 rm cron_dump
