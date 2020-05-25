@@ -16,5 +16,5 @@ EOF
 
 init
 echo "test_demo_db" >/var/wp/db/test_names
-bash db.sh /var/wp/db_test_names
+bash db.sh /var/wp/db/test_names
 cleanup

@@ -11,7 +11,7 @@ while IFS= read -r db_name; do
         continue
     fi
 
-    mysqldump -u root -p$MYSQL_ROOT_PASSWORD --databases db_name >dump.sql
+    mysqldump -u root -p$MYSQL_ROOT_PASSWORD --databases $db_name >dump.sql
     tar -czf $db_name-dump-$(echo $(date +%d) % 5 | bc).tar.gz dump.sql
 done <$1
 
