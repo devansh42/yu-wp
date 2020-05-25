@@ -9,6 +9,13 @@ services:
         deploy:
             placement:
                 constraints:
-                    - "node.role==manager"      
+                    - "node.role==manager"   
+        networks: 
+            - wp_overlay               
 volumes:
     logs:            
+
+networks:
+    wp_overlay:
+        external: 
+            name: wp_overlay    
