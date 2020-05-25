@@ -15,7 +15,15 @@ services:
             placement:
                 constraints:
                     - "node.role==manager"    
+        networks:
+            - wp_overlay 
+                        
 volumes:
     wp-data: 
     db-data:
     db-log:    
+
+networks:
+    wp_overlay:
+        external: 
+            name: wp_overlay
