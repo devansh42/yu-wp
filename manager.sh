@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # Script to export environment variables
 
 function setenv() {

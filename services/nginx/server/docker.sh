@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # This script is triggered by worker script and grab info
 # Usage, docker.sh :oid :plan :name :domains
 cid=$(docker ps -q -f "label=oid=$1")

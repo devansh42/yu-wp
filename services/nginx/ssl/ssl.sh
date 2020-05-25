@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # This script issues certiciates
 # Below Script will consume /var/wp/ssl directory for certificate issuance
 

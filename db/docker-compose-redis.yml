@@ -5,6 +5,10 @@ services:
         ports: 
             - "6379:6379"
         volumes:    
-            - logs:/var/log  #For Loggin purposes   
+            - logs:/var/log  #For Loggin purposes 
+        deploy:
+            placement:
+                constraints:
+                    - "node.role==manager"      
 volumes:
     logs:            

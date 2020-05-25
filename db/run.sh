@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 
 if ! [ -e /var/wp/db/name ]; then #If backup name file doesn't exists

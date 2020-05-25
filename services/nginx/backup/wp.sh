@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # This script backups site data
 # This script needs to situated in wp docker container
 

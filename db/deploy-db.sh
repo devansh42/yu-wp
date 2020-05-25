@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 file="docker-compose-db.yml"
 #Compiling this file
 sed "s/\$DOCKER_REG/$DOCKER_REG/" $file >/tmp/db_yml
@@ -13,4 +13,4 @@ cp $t $e
         sed "s/\$DO_BUCKET/$DO_BUCKET/" $e > $t; cp $t $e
 
 #Deploying to swarm
-docker-compose -f $file up -d
+docker stack up -c $file 

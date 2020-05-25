@@ -11,6 +11,10 @@ services:
             - db-data:/var/lib/mysql
             - db-log:/var/log/mysql 
             - wp-data:/var/wp/db
+        deploy:
+            placement:
+                constraints:
+                    - "node.role==manager"    
 volumes:
     wp-data: 
     db-data:

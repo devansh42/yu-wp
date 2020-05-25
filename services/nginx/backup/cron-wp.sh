@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # This file adds content to the cron scheduler
 cp wp.sh /etc/wp-backup
 crontab -l > cron_dump

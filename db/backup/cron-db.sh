@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 #This file adds content to the cron scheduler
 set -x
 cp /backup/db.sh /etc/db-backup

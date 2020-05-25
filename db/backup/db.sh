@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 #This script is for taking mysql's backup
 #This file consumes /var/wp/db/names which have the database name
