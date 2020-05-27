@@ -10,8 +10,6 @@ Jinja2==2.11.2
 MarkupSafe==1.1.1
 mysql-connector-python==8.0.20
 ordereddict==1.1
-pkg-resources==0.0.0
-protobuf==3.12.1
 redis==3.5.2
 requests==2.23.0
 six==1.15.0
