@@ -9,3 +9,4 @@ Environment Variabl used
 |MYSQL_PASSWD|Mysql Password|
 |MYSQL_HOST|Mysql host|
 |DEPLOYMENT_DIR|Directory which will be used for deploying wp containers|
+|LOGGIN_DIR|Logging Dir|

@@ -1,0 +1,26 @@
+version: "3.7"
+services: 
+    backend:
+        image: backend:latest
+        ports: 
+            - "80:80"
+        env_file: env.env    
+        volumes:
+            - log:/var/log/backend    
+            - deploy:/var/wp/deploy
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks: 
+            - wp_overlay
+        deploy:
+            placement:
+                constraints:
+                    - "node.role==manager"        
+
+volumes:
+    log:
+    deploy:    
+
+networks: 
+    wp_overlay:
+        external: 
+            name: wp_overlay        

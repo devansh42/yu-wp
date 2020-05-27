@@ -1,6 +1,7 @@
 version: "3.7"
 services: 
     redis:
+        hostname: redis
         image: redis:alpine
         ports: 
             - "6379:6379"

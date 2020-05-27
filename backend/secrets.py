@@ -1,14 +1,12 @@
 from os import getenv
 import mysql.connector as connector
 import redis
-WOO_URL = getenv("WOO_URL")
-WOO_KEY = getenv("WOO_KEY")
-WOO_SECRET = getenv("WOO_SECRET")
+
 MYSQL_PASSWD = getenv("MYSQL_PASSWD")
 MYSQL_HOST = getenv("MYSQL_HOST")
 DEPLOYMENT_DIR = getenv("DEPLOYMENT_DIR")
 REDIS_HOST = getenv("REDIS_HOST")
-LOGGIN_DIR = getenv("LOG_DIR")
+LOGGIN_DIR = "/var/log/backend"
 
 
 def get_default_mysql_conn():
