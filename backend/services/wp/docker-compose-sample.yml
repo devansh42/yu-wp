@@ -4,12 +4,13 @@ services:
         image: $DOCKER_REG/yu-wp-instance:latest
         env_file: env.env
         labels: 
-            - "oid=$oid" #Label for order id, this will in nginx configuration
-            - "plan=$plan" #Taken plan backup 
+            - "oid=$oid" # Label for order id, this will in nginx configuration
+            - "plan=$plan" # Taken plan backup 
         ports: 
-            - "0:80" #Random Port Choosen by system
+            - "0:80" # Random Port Choosen by system
         volumes: 
-            - wp-content: /var/www/html
+            - wp-content:/var/www/html 
+            - wps_data:/wp/link # This mount point to used for backup purposes
         deploy: 
             resources:
                 limits:
@@ -21,3 +22,6 @@ services:
 
 volumes: 
     wp-content:
+    wps_data:
+        external: true
+            name: wps_data    

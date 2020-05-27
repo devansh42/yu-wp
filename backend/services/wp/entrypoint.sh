@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 #This scripts makes default wp-config.php file
 filename="wp-config-sample.php"
@@ -14,11 +14,14 @@ sed "s/database_name_here/$DB_NAME/" $filename |
     sed "s/username_here/$DB_USER/" |
     sed "s/password_here/$DB_PASSWD/" |
     sed "s/localhost/$DB_HOST/" >wp-config.php
-   
-awk  -f token_replacer.awk wp-config.php > demofile
+
+awk -f token_replacer.awk wp-config.php >demofile
 for x in $(seq 0 7); do
-    sed "s/token_$x/${arr[$x]}/" demofile > wp-config.php
-    cp wp-config.php demofile 
+    sed "s/token_$x/${arr[$x]}/" demofile >wp-config.php
+    cp wp-config.php demofile
 done
+
 rm demofile
 
+# Making link for backup purpose
+ln -s /var/www/html /wp/link/$OID

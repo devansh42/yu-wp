@@ -47,7 +47,8 @@ def process_order(order: dict):
             "DB_USER": username,
             "DB_PASSWD": passwd,
             "DB_NAME": db_name,
-            "DB_HOST": MYSQL_HOST
+            "DB_HOST": MYSQL_HOST,
+            "OID":id
         }
         with get_default_redis_conn() as r:
             for item in order["line_items"]:
