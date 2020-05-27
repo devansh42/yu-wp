@@ -1,2 +1,2 @@
 #!/bin/bash
-docker stack up -c docker-compose.yml
+docker stack up -c docker-compose.yml stack_backend
