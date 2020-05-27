@@ -9,8 +9,10 @@ import hashlib
 from time import time
 import mysql.connector as connector
 from .pool import get_next_node
-from .secrets import MYSQL_PASSWD, MYSQL_HOST, DEPLOYMENT_DIR, REDIS_HOST, get_default_mysql_conn, get_default_redis_conn
+from .secrets import DEPLOYMENT_DIR,  get_default_mysql_conn, get_default_redis_conn
 
+# This imported because is will the mysql host address for wordpress instances
+from .secrets import MYSQL_HOST
 BEGINNER_PACK_ID = 1
 ADVANCE_PACK_ID = 2
 
@@ -60,7 +62,7 @@ def process_order(order: dict):
                 with open("%s/env.env" % dd, "w") as w:
                     w.writelines(make_env_file(data))
                 plan = "beg" if item["id"] == BEGINNER_PACK_ID else "adv"
-                com = subprocess.run(  # Running backend script
+                subprocess.run(  # Running backend script
                     "bash %s/services/wp/deploy.sh %s %s" % (os.path.dirname(__file__), dd, plan))
                 domain = meta_data["domain"]
                 domains = meta_data["domains"]
@@ -78,7 +80,9 @@ def process_order(order: dict):
 
 
 """
-Processes SSL Request
+process_ssl, process new ssl request for users
+This function doesn't need to be tested as it is straight forward
+
 """
 
 
@@ -107,7 +111,8 @@ def process_ssl(order: dict):
 
 
 """
-Checks for ssl status
+Checks for ssl status, 
+This function doesn't need to be tested as it is straight forward
 """
 
 
@@ -128,5 +133,5 @@ def get_random_password(oid: str) -> str:
     return m.hexdigest()
 
 
-def make_env_file(data: dict):
+def make_env_file(data: dict) -> [str]:
     return ["%s=%s" % (x, data[x]) for x in data.keys()]

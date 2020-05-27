@@ -13,13 +13,13 @@ def get_docker_client():
 
 
 """
-Retrives
+Retrives worker nodes in docker swarm
 """
 
 
 def get_node_list():
     d = get_docker_client()
-    l: [docker.models.nodes.Node] = d.nodes.list(filter={"role": "manager"})
+    l: [docker.models.nodes.Node] = d.nodes.list(filter={"role": "worker"})
     return list(map(lambda x: x.id, l))
 
 """

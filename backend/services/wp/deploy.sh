@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 #This script deploys the wordpress container on the given nodeid
 #e.g. deploy.sh /var/wp/deploy/:orderid :plan

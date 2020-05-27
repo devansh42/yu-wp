@@ -7,6 +7,7 @@ services:
             - ngninx_log:/var/log/nginx
             - 
             - /var/run/docker.sock:/var/run/docker.sock  #Docker Related stuff
-        
+            - ssl_log:/var/log/wp/ssl    
 volumes: 
-    ngninx_log:        
+    ngninx_log:     
+    ssl_log   

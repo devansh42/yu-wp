@@ -1,0 +1,14 @@
+#!/sbin/openrc-run
+# This file contains service definition for nginx configuration service
+
+start(){
+    ebegin "Starting nginx configuration generator"
+    start-stop-daemon -b -S -m -p /var/wp/new/conf.pid -x "/var/wp/new/exe main /var/wp/new"  
+    eend $?
+}
+
+stop(){
+    ebegin "Stoping nginx configuration generator service"
+    start-stop-daemon -K -p /var/wp/new/conf.pid -x "/var/wp/new/exe main /var/wp/new"
+    eend $?
+}
