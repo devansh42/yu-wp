@@ -12,7 +12,7 @@ NODEID = os.getenv("NODEID")
 
 def init():
     r = redis.Redis(host=REDIS_HOST)
-    ps = r.pubsub()
+    ps = r.pubsub(ignore_subscribe_messages=True)
     ps.subscribe("n%s-yu-wp-certificates" %
                  NODEID, "n%s-yu-wp-new-site" % NODEID)
     for msg in ps.listen():

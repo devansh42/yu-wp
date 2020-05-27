@@ -30,3 +30,4 @@ function setup_conf() {
 
 setup_conf # Setting up Daemon
 setup_ssl # Setting up Daemon
+nginx -g 
