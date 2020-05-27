@@ -2,6 +2,9 @@
 version: "3.7"
 services: 
     nginx:
+        networks: 
+            - wp_overlay
+            
         image: $DOCKER_REG/yu-wp-nginx
         volumes: 
             - ngninx_log:/var/log/nginx
@@ -14,4 +17,8 @@ volumes:
     ssl_log:
     wps_data:
         external: true
-            name: wps_data       
+            name: wps_data  .
+networks: 
+    wp_overlay:
+        external: 
+            name: wp_overlay            
