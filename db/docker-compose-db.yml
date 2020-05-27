@@ -2,7 +2,7 @@ version: "3.7"
 services:
     db:
         hostname: db
-        image: $DOCKER_REG/yu_wp_db:latest
+        image: 10.139.128.30:5210/yu_wp_db:latest
         ports: 
             - "3306:3306"
         env_file: 
