@@ -31,7 +31,8 @@ services:
             - ssl_log:/var/log/wp/ssl
             - wps_data:/var/wp/html
             - wp_ssl:/var/wp/ssl
-            - wp_new:/var/wp/new    
+            - wp_new:/var/wp/new
+            - nginx_exe:/etc/init.d    
 volumes: 
     ngninx_log:     
     conf:
