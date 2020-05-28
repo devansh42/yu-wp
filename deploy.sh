@@ -20,11 +20,8 @@ fi
 
 for x in $(seq $#); do
     case $1 in
-    db | redis | backend)
+    db | redis | backend | nginx)
         stack compose/$1.yml stack_$1
-        ;;
-    nginx)
-        dcompose compose/$1.yml
         ;;
     *)
         echo "No deployment  configuration found"
