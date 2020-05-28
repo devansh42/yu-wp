@@ -21,7 +21,7 @@ services:
         volumes:
             - wp_new:/var/wp/new     
             - conf:/etc/nginx   
-            - initd:/etc/init.d/nginx:r      
+            - initd:/etc/init.d/nginx
 
     nginx:
         environment:
@@ -40,8 +40,8 @@ services:
             - wps_data:/var/wp/html
             - wp_ssl:/var/wp/ssl
             - wp_new:/var/wp/new
-            - nginx_exe:/etc/init.d    
-            - initd:/etc/init.d/nginx:r
+            
+            - initd:/etc/init.d/nginx
             - certs:/var/letsencrypt
 volumes: 
     ngninx_log:     # For nginx logs 
