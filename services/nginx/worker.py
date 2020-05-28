@@ -47,7 +47,7 @@ def handle_new_site(data: dict):
     oid = data["oid"]
     domains = data["domains"]
     plan = data["plan"]
-    subprocess.run("%s/server/docker.sh %s %s %s '%s'" %
+    subprocess.run("%s/docker.sh %s %s %s '%s'" %
                    (os.path.dirname(__file__),oid, plan, name, domains))
 
 

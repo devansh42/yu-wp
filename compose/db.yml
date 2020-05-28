@@ -2,10 +2,10 @@ version: "3.7"
 services:
     db:
         hostname: db
-        image: 10.139.128.30:5210/yu_wp_db:latest
+        image: ${DOCKER_REG}/yu_wp:db
         
         env_file: 
-            - env.env
+            - env/db.env
         volumes: 
             - db-data:/var/lib/mysql
             - db-log:/var/log/mysql 

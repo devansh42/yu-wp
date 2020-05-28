@@ -1,0 +1,47 @@
+#Service Definition for nginx servers 
+version: "3.7"
+services: 
+    ssl:
+        depends_on: nginx
+        image: ${DOCKER_REG}/yu_wp:ssl
+
+        networks:
+            - wp_overlay
+        volumes:
+            - wp_ssl:/var/wp/ssl  
+    conf:
+        depends_on: nginx
+        image: ${DOCKER_REG}/yu_wp:conf
+        networks:
+            - wp_overlay
+        volumes:
+            - wp_new:/var/wp/new              
+
+    nginx:
+        env_file:
+            - env/nginx.env
+        networks: 
+            - wp_overlay
+            
+        image: ${DOCKER_REG}/yu_wp:nginx
+        volumes: 
+            - conf:/etc/nginx
+            - ngninx_log:/var/log/nginx
+            - /var/run/docker.sock:/var/run/docker.sock  #Docker Related stuff
+            - ssl_log:/var/log/wp/ssl
+            - wps_data:/var/wp/html
+            - wp_ssl:/var/wp/ssl
+            - wp_new:/var/wp/new    
+volumes: 
+    ngninx_log:     
+    conf:
+    wp_ssl:      
+    wp_new:
+    ssl_log:
+    wps_data:
+            external:
+                    name: wps_data
+networks: 
+    wp_overlay:
+        external: 
+            name: wp_overlay            

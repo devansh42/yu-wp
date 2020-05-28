@@ -1,7 +1,7 @@
 version: "3.7"
 services: 
     wordpress:
-        image: $DOCKER_REG/yu-wp-instance:latest
+        image: $DOCKER_REG/yu-wp:wp
         env_file: env.env
         labels: 
             - "oid=$oid" # Label for order id, this will in nginx configuration

@@ -1,10 +1,10 @@
 version: "3.7"
 services: 
     backend:
-        image: backend:latest
+        image: ${DOCKER_REG}/yu_wp:backend
         ports: 
             - "80:80"
-        env_file: env.env    
+        env_file: env/backend.env    
         volumes:
             - log:/var/log/backend    
             - deploy:/var/wp/deploy

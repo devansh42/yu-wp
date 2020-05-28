@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to export environment variables
+# Script to manage mangers
 
 function setenv() {
     # sets environmental variables
@@ -13,6 +13,12 @@ function network() {
         docker network create --driver overlay --attachable wp_overlay
 }
 
-setenv
+function registry(){
+    #creates registry if not exists
+   docker ps | grep registry > /dev/null ||  docker run -d -p 5210:5000 registry:2
 
+}
+
+setenv
+registry
 network
