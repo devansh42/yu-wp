@@ -30,7 +30,7 @@ function setup_conf() {
 	rc-service service_conf start
 }
 
-setup_conf # Setting up Daemon
-setup_ssl # Setting up Daemon
+# setup_conf # Setting up Daemon
+# setup_ssl # Setting up Daemon
 nginx -g "daemon off;" # Starting up nginx
 echo "Started nginx"
