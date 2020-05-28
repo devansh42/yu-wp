@@ -13,8 +13,9 @@ function setup_ssl() {
     chmod +x $exe ssl/service_ssl
     ln -s $(realpath ssl/service_ssl) /etc/init.d/service_ssl
     
-    /etc/init.d/service_ssl start # Starting the bg daemon
+    #/etc/init.d/service_ssl start # Starting the bg daemon
     rc-update add service_ssl default
+	rc-service service_ssl start		
 }
 
 function setup_conf() {
@@ -23,11 +24,13 @@ function setup_conf() {
     chmod +x $exe server/service_conf
     ln -s $(realpath server/service_conf) /etc/init.d/service_conf
     ln -s $(realpath server/nginx.conf) /var/wp/new/nginx.conf # Copying sample config file
-    /etc/init.d/service_conf start # Starting the bg daemon
+    #/etc/init.d/service_conf start # Starting the bg daemon
 
     rc-update add service_conf default
+	rc-service service_conf start
 }
 
 setup_conf # Setting up Daemon
 setup_ssl # Setting up Daemon
-nginx -g 
+nginx -g "daemon off;" # Starting up nginx
+echo "Started nginx"
