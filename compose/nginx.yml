@@ -12,7 +12,18 @@ services:
             - wp_ssl:/var/wp/ssl  
             - conf:/etc/nginx
             - certs:/var/letsencrypt
+        deploy:
+            placement:
+                constraints:
+                    - node.id==${NODEID}
+
+              
     conf:
+        deploy:
+            placement:
+                constraints:
+                    - node.id==${NODEID}
+
         depends_on:
                 - nginx
         image: ${DOCKER_REG}/yu_wp:conf
@@ -24,6 +35,11 @@ services:
             - initd:/etc/init.d/nginx
 
     nginx:
+        deploy:
+            placement:
+                constraints:
+                    - node.id==${NODEID}
+
         environment:
             NODEID: ${NODEID}
         env_file:
