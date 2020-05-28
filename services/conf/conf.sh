@@ -20,7 +20,7 @@ process_file() {
 }
 
 reload_nginx() {
-    nginx -s reload
+    /etc/init.d/nginx -s reload
 }
 
 # Expects $1 the directory to look in

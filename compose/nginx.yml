@@ -1,4 +1,4 @@
-#Service Definition for nginx servers 
+# Service Definition for nginx servers 
 version: "3.7"
 services: 
     ssl:
@@ -10,6 +10,8 @@ services:
             - wp_overlay
         volumes:
             - wp_ssl:/var/wp/ssl  
+            - conf:/etc/nginx
+            - certs:/var/letsencrypt
     conf:
         depends_on:
                 - nginx
@@ -17,9 +19,13 @@ services:
         networks:
             - wp_overlay
         volumes:
-            - wp_new:/var/wp/new              
+            - wp_new:/var/wp/new     
+            - conf:/etc/nginx   
+            - initd:/etc/init.d/nginx      
 
     nginx:
+        environment:
+            NODEID: ${NODEID}
         env_file:
             - env/nginx.env
         networks: 
@@ -35,12 +41,16 @@ services:
             - wp_ssl:/var/wp/ssl
             - wp_new:/var/wp/new
             - nginx_exe:/etc/init.d    
+            - initd:/etc/init.d/nginx
+            - certs:/var/letsencrypt
 volumes: 
-    ngninx_log:     
-    conf:
-    wp_ssl:      
-    wp_new:
-    ssl_log:
+    ngninx_log:     # For nginx logs 
+    conf:           # For dir containing nginx config
+    initd:          # File for nginx executable, i.e. /etc/init.d/nginx
+    wp_ssl:         # For dir of new ssl certificate request
+    wp_new:         # For new site config
+    ssl_log:        # For SSL logging dir
+    certs:          # For Let'sEncrypt Certificates
     wps_data:
             external:
                     name: wps_data
