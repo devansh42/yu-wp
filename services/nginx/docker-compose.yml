@@ -5,7 +5,7 @@ services:
         networks: 
             - wp_overlay
             
-        image: $DOCKER_REG/yu-wp-nginx
+        image: 10.139.128.30:5210/yu-wp-nginx
         volumes: 
             - ngninx_log:/var/log/nginx
             - 
