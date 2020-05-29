@@ -12,17 +12,17 @@ services:
             - wp_ssl:/var/wp/ssl  
             - conf:/etc/nginx
             - certs:/var/letsencrypt
-        deploy:
-            placement:
-                constraints:
-                    - node.id==${NODEID}
+              #deploy:
+              #placement:
+              # constraints:
+              #         - "node.id==${NODEID}"
 
               
     conf:
-        deploy:
-            placement:
-                constraints:
-                    - node.id==${NODEID}
+            # deploy:
+            #placement:
+            #   constraints:
+            #       - "node.id==${NODEID}"
 
         depends_on:
                 - nginx
@@ -35,10 +35,10 @@ services:
             - initd:/etc/init.d/nginx
 
     nginx:
-        deploy:
-            placement:
-                constraints:
-                    - node.id==${NODEID}
+            #deploy:
+            #placement:
+            #   constraints:
+            #       - "node.id==${NODEID}"
 
         environment:
             NODEID: ${NODEID}
@@ -56,7 +56,6 @@ services:
             - wps_data:/var/wp/html
             - wp_ssl:/var/wp/ssl
             - wp_new:/var/wp/new
-            
             - initd:/etc/init.d/nginx
             - certs:/var/letsencrypt
 volumes: 
