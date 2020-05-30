@@ -2,7 +2,7 @@
 # This scripts build any of the services avialable in this project
 # This takes $1 as build Target
 
-DOCKER_REG=10.139.128.30:5210
+DOCKER_REG=10.139.24.15:5210
 
 build() {
     docker build -t $DOCKER_REG/$1 $2

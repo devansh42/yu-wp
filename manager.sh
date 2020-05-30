@@ -18,7 +18,5 @@ function registry(){
    docker ps | grep registry > /dev/null ||  docker run -d -p 5210:5000 registry:2
 
 }
-
-setenv
 registry
 network
