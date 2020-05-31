@@ -12,7 +12,7 @@ import docker
 import asyncio
 import logging
 from hashlib import sha1
-import digitalocean
+
 
 
 ORDER_SITE = "site"
