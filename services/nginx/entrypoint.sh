@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Making folder certificate requests
-mkdir -p /var/wp /var/log/wp/site /var/log/wp/ssl
+mkdir -p /var/wp/html /var/log/wp/site /var/log/wp/ssl
 touch $BACKUP_SITE_FILE 
 echo "Registering Backup Cron Job"
 # Registering backup cron job

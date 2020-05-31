@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p /var/wp/db
 
 if ! [ -e /var/wp/db/names ]; then #If backup name file doesn't exists
     echo "yu_wp_data" >/var/wp/db/names
