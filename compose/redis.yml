@@ -8,7 +8,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - "node.role==manager"   
+                    - "node.id==${DNODEID}"   
         networks: 
             - wp_overlay               
 volumes:
