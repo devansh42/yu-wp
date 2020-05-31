@@ -3,6 +3,6 @@
 read -p 'Enter Node id ' nid
 read -p 'Enter Hostname ' hostname
 read -p 'Enter domain' domain
-echo "$nid $hostname $domain" >>$NODEFILE
+echo "$nid $hostname $domain" >>$NODESFILE
 echo "Record Added Sucessfully!!"
-cat $NODEFILE
+cat $NODESFILE
