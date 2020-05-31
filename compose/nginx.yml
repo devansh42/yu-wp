@@ -1,47 +1,17 @@
 # Service Definition for nginx servers 
 version: "3.7"
 services: 
-    ssl:
-        depends_on: 
-                - nginx
-        image: ${DOCKER_REG}/yu_wp:ssl
-
-        networks:
-            - wp_overlay
-        volumes:
-            - wp_ssl:/var/wp/ssl  
-            - conf:/etc/nginx
-            - certs:/var/letsencrypt
-        deploy:
-            placement:
-              constraints:
-                      - "node.id==${NODEID}"
-
-              
-    conf:
-        deploy:
-            placement:
-              constraints:
-                  - "node.id==${NODEID}"
-
-        depends_on:
-                - nginx
-        image: ${DOCKER_REG}/yu_wp:conf
-        networks:
-            - wp_overlay
-        volumes:
-            - wp_new:/var/wp/new     
-            - conf:/etc/nginx   
-            - initd:/etc/init.d/nginx
-
     nginx:
         deploy:
             placement:
               constraints:
-                  - "node.id==${NODEID}"
+                  - "node.id==${DNODEID}"
 
         environment:
-            NODEID: ${NODEID}
+            DNODEID: ${DNODEID}
+            NODEID: ${HOSTNAME}
+            DOCKER_REG: ${DOCKER_REG}
+            
         env_file:
             - env/nginx.env
         networks: 
@@ -50,21 +20,16 @@ services:
         image: ${DOCKER_REG}/yu_wp:nginx
         volumes: 
             - conf:/etc/nginx
-            - ngninx_log:/var/log/nginx
+            - logs:/var/log
+            - wp:/var/wp
             - /var/run/docker.sock:/var/run/docker.sock  #Docker Related stuff
-            - ssl_log:/var/log/wp/ssl
-            - wps_data:/var/wp/html
-            - wp_ssl:/var/wp/ssl
-            - wp_new:/var/wp/new
-            - initd:/etc/init.d/nginx
             - certs:/var/letsencrypt
+            - wps_data:/var/wp/html
+            - /var/www/html:/var/wp/html
 volumes: 
-    ngninx_log:     # For nginx logs 
-    conf:           # For dir containing nginx config
-    initd:          # File for nginx executable, i.e. /etc/init.d/nginx
-    wp_ssl:         # For dir of new ssl certificate request
-    wp_new:         # For new site config
-    ssl_log:        # For SSL logging dir
+    wp:
+    conf:    
+    logs: # For logs
     certs:          # For Let'sEncrypt Certificates
     wps_data:
             external:

@@ -6,7 +6,7 @@ import os.path
 from mysql.connector import errors
 from flask import Flask, request
 from .secrets import LOGGIN_DIR
-from .orders import check_ssl_status, process_ssl, process_order
+from .orders import check_site_status, check_ssl_status, process_ssl, process_order
 app = Flask(__name__)
 
 logging.basicConfig(filename=os.path.join(
@@ -18,6 +18,14 @@ def check_ssl():
     args = request.args
     id = args.get("id")  # Order Id
     status = check_ssl_status({"id": id})
+    return {"status": status}
+
+
+@app.route("/check/site", methods=["GET"])
+def check_site():
+    args = request.args
+    id = args.get("id")
+    status = check_site_status({"id": id})
     return {"status": status}
 
 
@@ -41,11 +49,10 @@ def order_new():
     res = ("ok", 200)
     try:
         process_order(order)
-        
+
     except errors.Error as e:
         logging.error(e.msg)
         res = (
             "Some internal server error, Please try later or contact us if problem persists", 500)
     return res
-
 

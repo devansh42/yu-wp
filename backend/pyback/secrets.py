@@ -4,7 +4,6 @@ import redis
 
 MYSQL_PASSWD = getenv("MYSQL_PASSWD")
 MYSQL_HOST = getenv("MYSQL_HOST")
-DEPLOYMENT_DIR = getenv("DEPLOYMENT_DIR")
 REDIS_HOST = getenv("REDIS_HOST")
 LOGGIN_DIR = "/var/log/backend"
 

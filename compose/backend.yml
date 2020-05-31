@@ -6,19 +6,18 @@ services:
             - "80:80"
         env_file: env/backend.env    
         volumes:
-            - log:/var/log/backend    
-            - deploy:/var/wp/deploy
-            - /var/run/docker.sock:/var/run/docker.sock
+            - log:/var/log    
+            - wp:/var/wp
         networks: 
             - wp_overlay
         deploy:
             placement:
                 constraints:
-                    - "node.role==manager"        
+                    - "node.id==${DNODEID}"        
 
 volumes:
     log:
-    deploy:    
+    wp:        
 
 networks: 
     wp_overlay:

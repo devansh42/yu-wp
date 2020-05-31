@@ -9,7 +9,6 @@ build() {
     docker push $DOCKER_REG/$1
 }
 
-
 if [ $# -lt "1" ]; then
     echo "Please specify build target"
     exit 1
@@ -17,14 +16,11 @@ fi
 
 for x in $(seq $#); do
     case $1 in
-    nginx | ssl | conf)
+    nginx | ssl | conf | wp)
         build yu_wp:$1 services/$1
         ;;
     db | backend)
         build yu_wp:$1 $1
-        ;;
-    wp)
-        build yu_wp:$1 backend/pyback/services/$1
         ;;
     *)
         echo "No Build Config found for given project"

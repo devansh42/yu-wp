@@ -5,6 +5,10 @@
 # $1 => Compose File
 # $2 => stack_name
 
+export DOCKER_REG=
+export DNODEID=
+export NODEID=
+
 stack() {
     docker stack up -c $1 $2
 }

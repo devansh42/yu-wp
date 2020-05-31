@@ -1,26 +1,34 @@
 """
 This module contain apis for backend resource management
 """
-import docker
+import os
+
+
+class Node:
+    def __init__(self, id: str, hostname: str, domain: str):
+        self.id, self.hostname, self.domain = id, hostname, domain
+
+
+# File that contains code info of nodes
+NODESFILE = os.getenv("NODESFILE")
+
+"""
+-- Structure of NODESFILE -- 
+NODEID HOSTNAME DOMAIN
+"""
 
 
 """
-Returns default docker client
-"""
-
-def get_docker_client():
-    return docker.from_env()
-
-
-"""
-Retrives worker nodes in docker swarm
+Retrives nodes from nodefile
 """
 
 
 def get_node_list():
-    d = get_docker_client()
-    l: [docker.models.nodes.Node] = d.nodes.list(filter={"role": "worker"})
-    return list(map(lambda x: x.id, l))
+
+    with open(NODESFILE, "r") as f:
+        return [Node(x[0], x[1], x[2]) for x in line.split() for line in f.readlines()]
+
+
 
 """
 Choosen node
@@ -32,9 +40,9 @@ Returns next node to load using round robin technique
 """
 
 
-def get_next_node() -> str :
+def get_next_node() -> Node:
     global choosen_node
-    l: [str] = get_node_list()
+    l: [Node] = get_node_list()
     n = l[choosen_node]
     if choosen_node == len(l)-1:
         choosen_node = 0

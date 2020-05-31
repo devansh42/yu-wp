@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-if ! [ -e /var/wp/db/name ]; then #If backup name file doesn't exists
-    echo "yu_wp_data" >/var/wp/db/name
+if ! [ -e /var/wp/db/names ]; then #If backup name file doesn't exists
+    echo "yu_wp_data" >/var/wp/db/names
 fi
 
 #Registering cron job for
