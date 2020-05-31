@@ -48,11 +48,10 @@ def order_new():
     order = request.form
     res = ("ok", 200)
     try:
-        process_order(order)
-
+        (s, t) = process_order(order)
+        res = ({"temp_domain": t, "site_domain": s}, 200)
     except errors.Error as e:
         logging.error(e.msg)
         res = (
             "Some internal server error, Please try later or contact us if problem persists", 500)
     return res
-

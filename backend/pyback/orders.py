@@ -33,6 +33,7 @@ process's an incomming order
 
 def process_order(order: dict):
     site_domain = ""
+    temp_name = ""
     with get_default_mysql_conn() as conn:
         cur = conn.cursor()
         id: str = order["id"]
@@ -81,7 +82,9 @@ def process_order(order: dict):
                 domain = meta_data["domain"]
                 domains = meta_data["domains"]
                 td = get_temp_domain(id)
-                set_domain_cname(td, node.domain) # Domain Pairing
+                temp_name = td
+
+                set_domain_cname(td, node.domain)  # Domain Pairing
                 pd = json.dumps({
                     "temp_domain": td,
                     "domain": domain,
@@ -96,7 +99,7 @@ def process_order(order: dict):
                 cur.execute(sql, val)
         cur.commit()  # Commiting database
 
-    return site_domain
+    return (site_domain, temp_name)
 
 
 """
