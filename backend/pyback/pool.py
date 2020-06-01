@@ -25,8 +25,10 @@ Retrives nodes from nodefile
 
 def get_node_list():
 
+    
     with open(NODESFILE, "r") as f:
         return [Node(x[0], x[1], x[2]) for x in line.split() for line in f.readlines()]
+    
 
 
 
