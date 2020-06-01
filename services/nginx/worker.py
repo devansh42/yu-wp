@@ -10,9 +10,8 @@ import time
 import subprocess
 import docker
 import asyncio
-import logging
+import logging as dockerLogger
 from hashlib import sha1
-
 
 
 ORDER_SITE = "site"
@@ -29,9 +28,7 @@ NODEID = os.getenv("NODEID")  # Will  be the hostname of host
 # Channel for response forwarding
 RESPONSECH = "res-yu-wp"
 # Logging initalizer
-dockerLogger = logging.getLogger("docker")
-fl = logging.FileHandler("/var/log/wp/site/docker.log", "a+")
-dockerLogger.addHandler(fl)
+dockerLogger.basicConfig("/var/log/wp/site/docker.log")
 
 
 def init():

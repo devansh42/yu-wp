@@ -34,7 +34,8 @@ process's an incomming order
 def process_order(order: dict):
     site_domain = ""
     temp_name = ""
-    with get_default_mysql_conn() as conn:
+    conn = get_default_mysql_conn()
+    try:
         cur = conn.cursor()
         id: str = order["id"]
         db_name = "yu_wp_user_data_"+id
@@ -98,7 +99,8 @@ def process_order(order: dict):
                 val = (id, td, 0, plan, domain, domains)
                 cur.execute(sql, val)
         cur.commit()  # Commiting database
-
+    finally:
+        conn.close()
     return (site_domain, temp_name)
 
 
@@ -110,7 +112,8 @@ This function doesn't need to be tested as it is straight forward
 
 
 def process_ssl(order: dict):
-    with get_default_mysql_conn() as conn:
+    conn = get_default_mysql_conn()
+    try:
         cursor = conn.cursor()
         oid = order["id"]
         sql = "update orders set ssl_status=%s where oid=%d"
@@ -131,6 +134,8 @@ def process_ssl(order: dict):
         with get_default_redis_conn() as red:
             red.publish("n%s-yu-wp-certificates" % d["nid"], json.dumps(d))
         cursor.commit()
+    finally:
+        conn.close()
 
 
 """
@@ -149,7 +154,8 @@ def check_site_status(order: dict):
 
 def __check_status__(order: dict, item: str):
     id = order["id"]
-    with get_default_mysql_conn() as conn:
+    conn = get_default_mysql_conn()
+    try:
         c = conn.cursor()
         sql = ""
         sql = "select site_status from orders where oid=%s limit 1" if item == "site" else "select ssl_status from orders where oid=%s limit 1"
@@ -157,6 +163,8 @@ def __check_status__(order: dict, item: str):
         c.execute(sql, val)
         for x in c.fetchall():
             return x["ssl_status" if item == "ssl" else "site_status"]
+    finally:
+        conn.close()
 
 
 def get_random_password(oid: str) -> str:
@@ -182,7 +190,8 @@ def make_env_file(data: dict) -> [str]:
 
 # The Puspose of this method is to change db state as required
 async def response_handler():
-    with get_default_mysql_conn() as conn:
+    conn = get_default_mysql_conn()
+    try:
         c = conn.cursor()
 
         with get_default_redis_conn() as r:
@@ -197,6 +206,8 @@ async def response_handler():
                     sql = "update orders set site_status = %s where oid = %s limit 1"
                 c.execute(sql, (d["status"], d["oid"]))
                 c.commit()  # Commiting transaction
+    finally:
+        conn.close()
 
 
 def get_temp_domain(oid: str):
