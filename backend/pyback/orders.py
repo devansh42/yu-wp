@@ -36,28 +36,29 @@ def process_order(order: dict):
     site_domain = ""
     temp_name = ""
     conn = get_default_mysql_conn()
+    cur = conn.cursor()
+
     try:
-        cur = conn.cursor()
         id: str = order["id"]
         db_name = "yu_wp_user_data_%s" % id
         username = "u%s" % id
         passwd = get_random_password(id)
         ar = []
-        sql = "create user %s@%s identified by %s"
-        val = (username, "%", passwd)
-        ar += [(sql, val)]
-        sql = "create database %s"
-        val = (db_name)
-        ar += [(sql, val)]
-        sql = "grant all PRIVILEGES on %s.* to %s@%s"
-        val = (db_name, username, "%")
-        ar += (sql, val)
-        for (s, v) in ar:
-            try:
-                cur.execute(s, v)
-            except Exception as err:
-                raise Exception(err, s, v)
+        sql = ""
+        val = ()
+        try:
+            sql = "create user %s@%s identified by %s"
+            val = (username, "%", passwd)
 
+            cur.execute(sql, val)
+            sql = "create database %s"
+            val = (db_name)
+            cur.execute(sql, val)
+            sql = "grant all PRIVILEGES on %s.* to %s@%s"
+            val = (db_name, username, "%")
+            cur.execute(sql, val)
+        except Exception as e:
+            raise Exception(e, sql, val)
         data: dict = {
             "WORDPRESS_DB_USER": username,
             "WORDPRESS_DB_PASSWORD": passwd,
@@ -103,6 +104,10 @@ def process_order(order: dict):
                 val = (id, td, 0, plan, domain, domains)
                 cur.execute(sql, val)
         cur.commit()  # Commiting database
+    except:
+        cur.rollback()
+        raise
+
     finally:
         conn.close()
     return (site_domain, temp_name)
