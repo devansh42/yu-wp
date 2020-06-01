@@ -53,7 +53,7 @@ def process_order(order: dict):
 
             cur.execute(sql, val)
             sql = "create database %s"
-            val = (db_name)
+            val = (db_name,)
             cur.execute(sql, val)
             sql = "grant all PRIVILEGES on %s.* to %s@%s"
             val = (db_name, username, "%")
