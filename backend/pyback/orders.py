@@ -57,7 +57,7 @@ def process_order(order: dict):
             cur.execute(sql%val)
             sql = "grant all PRIVILEGES on %s.* to %s@%s"
             val = (db_name, username, "%")
-            cur.execute(sql, val)
+            cur.execute(sql%val)
         except Exception as e:
             raise Exception(e, sql, val)
         data: dict = {
