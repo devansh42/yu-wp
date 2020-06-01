@@ -4,11 +4,10 @@ This module defines api endpoints
 import logging
 import os.path
 from mysql.connector import errors
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from .secrets import LOGGIN_DIR
 from .orders import check_site_status, check_ssl_status, process_ssl, process_order
 app = Flask(__name__)
-
 logging.basicConfig(filename=os.path.join(
     LOGGIN_DIR, "backend.log"), level=logging.DEBUG)
 
@@ -18,7 +17,7 @@ def check_ssl():
     args = request.args
     id = args.get("id")  # Order Id
     status = check_ssl_status({"id": id})
-    return {"status": status}
+    return jsonify(status=status), 200
 
 
 @app.route("/check/site", methods=["GET"])
@@ -26,7 +25,7 @@ def check_site():
     args = request.args
     id = args.get("id")
     status = check_site_status({"id": id})
-    return {"status": status}
+    return jsonify(status=status), 200
 
 
 @app.route("/req/ssl", methods=["GET"])
@@ -45,11 +44,11 @@ def req_ssl():
 
 @app.route("/orders/new", methods=["POST"])
 def order_new():
-    order = request.form
+    order = request.get_json()
     res = ("ok", 200)
     try:
         (s, t) = process_order(order)
-        res = ({"temp_domain": t, "site_domain": s}, 200)
+        res = jsonify(temp_domain=t, site_domain=s), 200
     except errors.Error as e:
         logging.error(e.msg)
         res = (
