@@ -169,7 +169,8 @@ def __check_status__(order: dict, item: str):
 
 def get_random_password(oid: str) -> str:
     m = hashlib.sha256()
-    m.update(b"%s%d" % (oid, time()))
+    s="%s%d" % (oid, time())
+    m.update(s)
     return m.hexdigest()
 
 
