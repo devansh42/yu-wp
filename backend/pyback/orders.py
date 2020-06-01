@@ -170,7 +170,7 @@ def __check_status__(order: dict, item: str):
 def get_random_password(oid: str) -> str:
     m = hashlib.sha256()
     s="%s%d" % (oid, time())
-    m.update(s)
+    m.update(s.encode("utf-8"))
     return m.hexdigest()
 
 
@@ -181,7 +181,8 @@ get_random_sk returns random salt and key
 
 def get_random_sk() -> str:
     m = hashlib.sha256()
-    m.update(b"%s%d" % (random.random(), time()))
+    s="%s%d" % (random.random(), time())
+    m.update(s.encode("utf-8"))
     return m.hexdigest()
 
 
@@ -212,7 +213,8 @@ async def response_handler():
 
 
 def get_temp_domain(oid: str):
-    p = int(sha1(b"%s%s" % (oid, time())).hexdigest(), 16) % (10**6)
+    s="%s%s" % (oid, time())
+    p = int(sha1(s.encode("utf-8")).hexdigest(), 16) % (10**6)
     return "%d.%s" % (p, DOMAINSUFFIX)
 
 
