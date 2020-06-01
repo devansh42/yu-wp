@@ -38,8 +38,8 @@ def process_order(order: dict):
     try:
         cur = conn.cursor()
         id: str = order["id"]
-        db_name = "yu_wp_user_data_"+id
-        username = "u"+id
+        db_name = "yu_wp_user_data_%s" % id
+        username = "u%s" % id
         passwd = get_random_password(id)
         ar = []
         sql = "create user %s@%s identified by %s"

@@ -10,7 +10,7 @@ import time
 import subprocess
 import docker
 import asyncio
-import logging as dockerLogger
+import logging
 from hashlib import sha1
 
 
@@ -28,7 +28,7 @@ NODEID = os.getenv("NODEID")  # Will  be the hostname of host
 # Channel for response forwarding
 RESPONSECH = "res-yu-wp"
 # Logging initalizer
-dockerLogger.basicConfig("/var/log/wp/site/docker.log")
+logging.basicConfig(filename="/var/log/wp/site/docker.log", filemode="a+")
 
 
 def init():
@@ -143,7 +143,7 @@ async def handle_new_site(data: dict, redis, loop):
                 redis.publish(RESPONSECH, json.dumps(resp))
             except Exception as err:
                 redis.publish(RESPONSECH, json.dumps(resp))
-                dockerLogger.error(err)
+                logging.error(err)
 """
 enable_backup, Enable backup for site
 """
