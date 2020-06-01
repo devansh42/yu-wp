@@ -36,6 +36,7 @@ def process_order(order: dict):
     site_domain = ""
     temp_name = ""
     conn = get_default_mysql_conn()
+    conn.autocommit=False
     cur = conn.cursor()
 
     try:
@@ -104,7 +105,9 @@ def process_order(order: dict):
                 val = (id, td, 0, plan, domain, domains)
                 cur.execute(sql, val)
         cur.commit()  # Commiting database
-    
+    except Exception as e:
+        conn.rollback()
+        raise e
     finally:
         cur.close()
         conn.close()
@@ -120,6 +123,9 @@ This function doesn't need to be tested as it is straight forward
 
 def process_ssl(order: dict):
     conn = get_default_mysql_conn()
+    conn.autocommit=False
+    cursor=conn.cursor()
+
     try:
         cursor = conn.cursor()
         oid = order["id"]
@@ -141,7 +147,11 @@ def process_ssl(order: dict):
         with get_default_redis_conn() as red:
             red.publish("n%s-yu-wp-certificates" % d["nid"], json.dumps(d))
         cursor.commit()
+    raise Exception as e:
+        conn.rollback()
+        raise e
     finally:
+        cursor.close()
         conn.close()
 
 
@@ -162,8 +172,9 @@ def check_site_status(order: dict):
 def __check_status__(order: dict, item: str):
     id = order["id"]
     conn = get_default_mysql_conn()
+    c = conn.cursor()
     try:
-        c = conn.cursor()
+        
         sql = ""
         sql = "select site_status from orders where oid=%s limit 1" if item == "site" else "select ssl_status from orders where oid=%s limit 1"
         val = (id)
@@ -171,6 +182,7 @@ def __check_status__(order: dict, item: str):
         for x in c.fetchall():
             return x["ssl_status" if item == "ssl" else "site_status"]
     finally:
+        c.close()
         conn.close()
 
 
