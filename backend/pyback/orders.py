@@ -104,11 +104,9 @@ def process_order(order: dict):
                 val = (id, td, 0, plan, domain, domains)
                 cur.execute(sql, val)
         cur.commit()  # Commiting database
-    except:
-        cur.rollback()
-        raise
-
+    
     finally:
+        cur.close()
         conn.close()
     return (site_domain, temp_name)
 
