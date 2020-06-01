@@ -6,7 +6,7 @@ import subprocess
 import redis
 import json
 import random
-import hashlib
+import hashlib,logging
 from hashlib import sha1
 from time import time
 import mysql.connector as connector
@@ -52,7 +52,11 @@ def process_order(order: dict):
         val = (db_name, username, "%")
         ar += (sql, val)
         for (s, v) in ar:
-            cur.execute(s, v)
+            try:
+                cur.execute(s, v)
+            except Exception as err:
+                logging.error(err, s, v)
+                return
 
         data: dict = {
             "WORDPRESS_DB_USER": username,
@@ -169,7 +173,7 @@ def __check_status__(order: dict, item: str):
 
 def get_random_password(oid: str) -> str:
     m = hashlib.sha256()
-    s="%s%d" % (oid, time())
+    s = "%s%d" % (oid, time())
     m.update(s.encode("utf-8"))
     return m.hexdigest()
 
@@ -181,7 +185,7 @@ get_random_sk returns random salt and key
 
 def get_random_sk() -> str:
     m = hashlib.sha256()
-    s="%s%d" % (random.random(), time())
+    s = "%s%d" % (random.random(), time())
     m.update(s.encode("utf-8"))
     return m.hexdigest()
 
@@ -213,7 +217,7 @@ async def response_handler():
 
 
 def get_temp_domain(oid: str):
-    s="%s%s" % (oid, time())
+    s = "%s%s" % (oid, time())
     p = int(sha1(s.encode("utf-8")).hexdigest(), 16) % (10**6)
     return "%d.%s" % (p, DOMAINSUFFIX)
 
