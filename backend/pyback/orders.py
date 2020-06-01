@@ -6,7 +6,8 @@ import subprocess
 import redis
 import json
 import random
-import hashlib,logging
+import hashlib
+import logging
 from hashlib import sha1
 from time import time
 import mysql.connector as connector
@@ -55,8 +56,7 @@ def process_order(order: dict):
             try:
                 cur.execute(s, v)
             except Exception as err:
-                logging.error(err, s, v)
-                return
+                raise Exception(err, s, v)
 
         data: dict = {
             "WORDPRESS_DB_USER": username,
