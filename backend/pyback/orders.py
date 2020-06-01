@@ -147,7 +147,7 @@ def process_ssl(order: dict):
         with get_default_redis_conn() as red:
             red.publish("n%s-yu-wp-certificates" % d["nid"], json.dumps(d))
         cursor.commit()
-    raise Exception as e:
+    except Exception as e:
         conn.rollback()
         raise e
     finally:
