@@ -2,14 +2,14 @@ version: "3.7"
 services: 
     wordpress:
         labels:
-            - "oid=$OID"
-        image: $DOCKER_REG/yu_wp:wp
+            - "oid={{.OID}}"
+        image: {{.DOCKER_REG}}/yu_wp:wp
         env_file: env.env
         networks:
             - wp_overlay
         ports: 
             - "0:80" # Random Port Choosen by system
-        hostname: "wp_$OID" # For network lookup    
+        hostname: "wp_{{.OID}}" # For network lookup    
         volumes: 
             - wp-content:/var/www/html 
             - wps_data:/wp/link # This mount point to used for backup purposes
@@ -20,7 +20,7 @@ services:
                     memory: "256M"
             placement:
                 constraints:
-                    - "node.id==$NODEID"
+                    - "node.id=={{.NODEID}}"
 
 volumes: 
     wp-content:
