@@ -76,7 +76,7 @@ type responseMsg struct {
 }
 
 func getDB() (*sql.DB, error) {
-	return sql.Open("mysql", fmt.Sprint("root:", MYSQL_PASSWD, "@", MYSQL_HOST, "/", "yu_wp_data"))
+	return sql.Open("mysql", fmt.Sprint("root:", MYSQL_PASSWD, "@tcp(", MYSQL_HOST, ":3306)/", "yu_wp_data"))
 
 }
 
@@ -86,7 +86,7 @@ func getRedis() *redis.Client {
 
 }
 func createUserAndDB(tx *sql.Tx, username, passwd, dbname string) error {
-	sql := "create user '%s'@'%' identified by '%s'"
+	sql := "create user '%s'@ identified by '%s'"
 
 	_, err := tx.Exec(fmt.Sprintf(sql, username, passwd))
 	if err != nil {
@@ -97,7 +97,7 @@ func createUserAndDB(tx *sql.Tx, username, passwd, dbname string) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(fmt.Sprintf("grant all PRIVILEGES on %s.* to %s@%s", dbname, username, "%"))
+	_, err = tx.Exec(fmt.Sprintf("grant all PRIVILEGES on %s.* to %s@", dbname, username))
 	if err != nil {
 		return err
 	}
@@ -245,8 +245,8 @@ func setTempDomain(dom string, o *order) error {
 	c := godo.NewFromToken(DOTOKEN)
 	x := new(godo.DomainRecordEditRequest)
 	x.Type = "CNAME"
-	x.Name = strings.Split(o.TempDomain, " ")[0]
-	x.Data = dom
+	x.Name = strings.Split(o.TempDomain, ".")[0]
+	x.Data = fmt.Sprint(dom,".") // Appending dot for cname record
 	_, _, err := c.Domains.CreateRecord(context.Background(), DOMAINSUFFIX, x)
 	return err
 }

@@ -59,12 +59,12 @@ func TestUserCreation(t *testing.T) {
 	tx.Commit()
 }
 
-func TesGetTempDomain(t *testing.T) {
+func TestGetTempDomain(t *testing.T) {
 	o := new(order)
 	o.Id = "123"
-
-	o.TempDomain = "demotemp.bsnl.online"
-	DOTOKEN = "DOTOKEN"
+	DOMAINSUFFIX="bsnl.online"
+	o.TempDomain = "demotemp1.bsnl.online"
+	DOTOKEN = "d58c53975803d0389a78d2a647722ec850fa902e4318d1dce1e07ad3362a6b07"
 	err := setTempDomain("ozai.bsnl.online", o)
 	if err != nil {
 		t.Error(err)
