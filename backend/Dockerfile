@@ -13,4 +13,4 @@ WORKDIR /backend
 COPY --from=pro /backend/bin/backend /backend/backend
 ADD . .
 RUN mkdir -p /var/log/backend /var/wp
-ENTRYPOINT [ "/backend/backend" ]
+ENTRYPOINT [ "/backend/backend","> /var/log/backend/panic.log 2>&1 " ]
