@@ -435,7 +435,8 @@ func main() {
 	}
 	defer f.Close()
 	log.SetOutput(f)
-	go io.Copy(f, os.Stderr) // for panic attacks
+	go io.Copy(f, os.Stderr) // for error reporting
+	go io.Copy(f, os.Stdout) // for panic attacks
 
 	r := getRedis()
 	ch := r.Subscribe(context.Background(), RESPONSECH)
