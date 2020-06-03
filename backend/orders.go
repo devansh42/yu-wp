@@ -327,7 +327,7 @@ func getNodeList() []node {
 
 func getNextNode() node {
 	ns := getNodeList()
-	if choosenNode == len(ns)-1 {
+	if choosenNode >= len(ns) {
 		choosenNode = 0
 	}
 	n := ns[choosenNode]

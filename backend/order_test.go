@@ -27,11 +27,11 @@ func TestGetNodeList(t *testing.T) {
 	// }
 	// f.Close()
 	NODESFILE = fname
-	ns := getNodeList()
-	for _, v := range ns {
+	for i := 0; i < 5; i++ {
+		v := getNextNode()
 		t.Log(v.Id, v.Hostname, v.Domain)
-	}
 
+	}
 }
 
 func TestUserCreation(t *testing.T) {
