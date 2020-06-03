@@ -10,6 +10,7 @@ RUN cp -r $GOPATH/bin .
 FROM nginx:alpine 
 RUN apk update && apk add python3 certbot certbot-nginx bash docker
 RUN pip3 install s3cmd
+RUN mkdir /etc/nginx/sites-available
 WORKDIR /worker
 COPY --from=build /worker/bin/worker /worker/worker
 ADD . .
