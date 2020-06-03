@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -14,19 +13,19 @@ import (
 
 func TestGetNodeList(t *testing.T) {
 	fname := "/tmp/nodelist"
-	f, err := os.OpenFile(fname, os.O_WRONLY, 0644)
-	if err != nil {
-		t.Error(err)
-	}
-	b := new(bytes.Buffer)
-	b.Write([]byte("ededed hostname ww.go"))
-	b.Write([]byte("\n"))
-	b.Write([]byte("eded dededhu dheudhedu"))
-	_, err = f.Write(b.Bytes())
-	if err != nil {
-		t.Error(err)
-	}
-	f.Close()
+	// f, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0644)
+	// if err != nil {
+	// 	t.Error(err)
+	// }
+	// b := new(bytes.Buffer)
+	// b.Write([]byte("ededed hostname ww.go"))
+	// b.Write([]byte("\n"))
+	// b.Write([]byte("eded dededhu dheudhedu"))
+	// _, err = f.Write(b.Bytes())
+	// if err != nil {
+	// 	t.Error(err)
+	// }
+	// f.Close()
 	NODESFILE = fname
 	ns := getNodeList()
 	for _, v := range ns {

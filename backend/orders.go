@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bytes"
+	"bufio"
 	"context"
 	"crypto/md5"
 	"crypto/sha256"
@@ -9,7 +9,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -311,10 +310,12 @@ func consumeRespMsg(r *responseMsg) {
 
 func getNodeList() []node {
 
-	b, _ := ioutil.ReadFile(NODESFILE)
+	b, _ := os.Open(NODESFILE)
 	var ns []node
-	for _, v := range bytes.Split(b, []byte("\n")) {
-		line := string(v)
+	s := bufio.NewScanner(b)
+	defer b.Close()
+	for s.Scan() {
+		line := s.Text()
 		line = strings.TrimSpace(line)
 		lp := strings.Split(line, " ")
 		ns = append(ns, node{lp[0], lp[1], lp[2]})
