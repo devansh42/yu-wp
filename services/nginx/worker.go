@@ -53,15 +53,15 @@ var (
 type Plan uint8
 
 type order struct {
-	Id      string `json:id`
-	Name    string `json:name`
-	Domain  string `json:domain`
-	Domains string `json:domains`
+	Id string `json:"id"`
 
-	TempDomain string            `json:temp_domain`
-	Plan       Plan              `json:plan`
-	Wp         map[string]string `json:wp`
-	Type       otype             `json:type`
+	Domain  string `json:"domain"`
+	Domains string `json:"domains"`
+
+	TempDomain string            `json:"temp_domain"`
+	Plan       Plan              `json:"plan"`
+	Wp         map[string]string `json:"wp"`
+	Type       otype             `json:"type"`
 }
 type otype uint8
 
@@ -69,10 +69,10 @@ type nginxconf struct {
 	BindAddr, ServerNames, TempName, OID string
 }
 type responseMsg struct {
-	Id     string `json:id`
-	Type   otype  `json:type`
-	Status int    `json:status`
-	Msg    string `json:msg`
+	Id     string `json:"id"`
+	Type   otype  `json:"type"`
+	Status int    `json:"status"`
+	Msg    string `json:"msg"`
 }
 type ymlconf struct {
 	OID, NODEID, DOCKER_REG string
@@ -252,7 +252,7 @@ func setupNginxConf(o *order) error {
 			}
 		}
 	}
-	name := fmt.Sprint(o.Name, ".conf")
+	name := fmt.Sprint(o.Domain, ".conf")
 	fp := path.Join(NGINX_CONF, "sites-available", name)
 	f, _ := os.OpenFile(fp, os.O_WRONLY, 0644)
 	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("wp_", o.Id, ":", port), o.Domains, o.TempDomain, o.Id})

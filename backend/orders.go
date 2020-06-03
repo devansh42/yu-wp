@@ -55,24 +55,28 @@ type orderMsg struct {
 	node  *node
 	order *order
 }
-type order struct {
-	Id      string `json:id`
-	Name    string `json:name`
-	Domain  string `json:domain`
-	Domains string `json:domains`
 
-	TempDomain string            `json:temp_domain`
-	Plan       Plan              `json:plan`
-	Wp         map[string]string `json:wp`
-	Type       otype             `json:type`
+type order struct {
+	Id string `json:"id"`
+
+	Domain  string `json:"domain"`
+	Domains string `json:"domains"`
+
+	TempDomain string            `json:"temp_domain"`
+	Plan       Plan              `json:"plan"`
+	Wp         map[string]string `json:"wp"`
+	Type       otype             `json:"type"`
 }
 type otype uint8
 
+type nginxconf struct {
+	BindAddr, ServerNames, TempName, OID string
+}
 type responseMsg struct {
-	Id     string `json:id`
-	Type   otype  `json:type`
-	Status int    `json:status`
-	Msg    string `json:msg`
+	Id     string `json:"id"`
+	Type   otype  `json:"type"`
+	Status int    `json:"status"`
+	Msg    string `json:"msg"`
 }
 
 func getDB() (*sql.DB, error) {
@@ -246,7 +250,7 @@ func setTempDomain(dom string, o *order) error {
 	x := new(godo.DomainRecordEditRequest)
 	x.Type = "CNAME"
 	x.Name = strings.Split(o.TempDomain, ".")[0]
-	x.Data = fmt.Sprint(dom,".") // Appending dot for cname record
+	x.Data = fmt.Sprint(dom, ".") // Appending dot for cname record
 	_, _, err := c.Domains.CreateRecord(context.Background(), DOMAINSUFFIX, x)
 	return err
 }
