@@ -230,6 +230,7 @@ func setupNginxConf(o *order) error {
 	if err != nil {
 		return err
 	}
+	c.NegotiateAPIVersion(context.Background())
 	var port uint16 = 0
 	cs, err := c.ContainerList(context.Background(), types.ContainerListOptions{
 		Filters: filters.NewArgs(filters.KeyValuePair{Key: "label", Value: fmt.Sprint("oid=", o.Id)})})

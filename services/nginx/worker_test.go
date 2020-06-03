@@ -35,13 +35,18 @@ func TestDockerTemplate(t *testing.T) {
 
 func TestContainerListing(t *testing.T) {
 	c := exec.Command("docker", "run", "-d", "--label name=devansh42", "nginx:alpine")
-	c.Run()
+	err:=c.Run()
+	if err!=nil{
+		t.Error(err)
+	}
 	cli, _ := client.NewEnvClient()
+	cli.NegotiateAPIVersion(context.Background())
 	cs, err := cli.ContainerList(context.Background(), types.ContainerListOptions{
 		Filters: filters.NewArgs(filters.KeyValuePair{Key: "label", Value: "name=devansh42"})})
 	if err != nil {
 		t.Error(err)
 	}
+	t.Log("Searched")
 	for _, v := range cs {
 		t.Log(v.ID)
 		d := time.Hour * 1
