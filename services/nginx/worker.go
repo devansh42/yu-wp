@@ -115,7 +115,7 @@ func consumeReq(ch <-chan *redis.Message) {
 }
 
 func enableBackup(o *order) {
-	f, _ := os.OpenFile(BACKUP_SITE_FILE, os.O_APPEND, 0644)
+	f, _ := os.OpenFile(BACKUP_SITE_FILE, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	defer f.Close()
 	f.Write([]byte(o.Id))
 	f.Write([]byte("\n"))
@@ -152,8 +152,8 @@ func handleNewSSLOrder(o *order) {
 	cmdargs = append(cmdargs, "--agree-tos", "-n", "-m", EMAIL, "--nginx")
 	cmdargs = append(cmdargs, domains...)
 	dep := exec.Command("certbot", cmdargs...)
-	ef, _ := os.OpenFile("/var/log/wp/ssl/error.log", os.O_APPEND, 0644)
-	of, _ := os.OpenFile("/var/log/wp/ssl/log.log", os.O_APPEND, 0644)
+	ef, _ := os.OpenFile("/var/log/wp/ssl/error.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	of, _ := os.OpenFile("/var/log/wp/ssl/log.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer ef.Close()
 	defer of.Close()
 	po, _ := dep.StdoutPipe()
@@ -175,7 +175,7 @@ func handleNewSiteOrder(o *order) {
 	er := func() error {
 		td, _ := ioutil.TempDir(os.TempDir(), "wpinst")
 		//Writting deployment file
-		x, _ := os.OpenFile(path.Join(td, "wp.yml"), os.O_WRONLY, 0644)
+		x, _ := os.OpenFile(path.Join(td, "wp.yml"), os.O_WRONLY|os.O_CREATE, 0644)
 		err := dockerTemplate.Execute(x, &ymlconf{
 			DOCKER_REG: DOCKER_REG,
 			OID:        o.Id,
@@ -186,15 +186,15 @@ func handleNewSiteOrder(o *order) {
 		x.Close()
 		//Writting env variables
 		envs := makeEnvFile(o.Wp)
-		f, _ := os.OpenFile(path.Join(td, "env.env"), os.O_WRONLY, 0644)
+		f, _ := os.OpenFile(path.Join(td, "env.env"), os.O_WRONLY|os.O_CREATE, 0644)
 		for _, v := range envs {
 			f.WriteString(fmt.Sprint(v, "\n"))
 		}
 		f.Close()
 
 		dep := exec.Command("docker", "stack", "up", "-c", path.Join(td, "wp.yml"))
-		ef, _ := os.OpenFile("/var/log/wp/site/error.log", os.O_APPEND, 0644)
-		of, _ := os.OpenFile("/var/log/wp/site/log.log", os.O_APPEND, 0644)
+		ef, _ := os.OpenFile("/var/log/wp/site/error.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		of, _ := os.OpenFile("/var/log/wp/site/log.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 		po, _ := dep.StdoutPipe()
 		pe, _ := dep.StderrPipe()
 		go io.Copy(ef, pe)
@@ -254,7 +254,7 @@ func setupNginxConf(o *order) error {
 	}
 	name := fmt.Sprint(o.Domain, ".conf")
 	fp := path.Join(NGINX_CONF, "sites-available", name)
-	f, _ := os.OpenFile(fp, os.O_WRONLY, 0644)
+	f, _ := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0644)
 	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("wp_", o.Id, ":", port), o.Domains, o.TempDomain, o.Id})
 	if err != nil {
 		return err
@@ -280,7 +280,7 @@ func initDockerTemplate() {
 }
 
 func initLogger() {
-	f, _ := os.OpenFile("/var/log/wp/worker.log", os.O_APPEND, 0644)
+	f, _ := os.OpenFile("/var/log/wp/worker.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	log.SetOutput(f)
 
 }

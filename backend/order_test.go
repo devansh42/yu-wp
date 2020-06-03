@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"testing"
@@ -62,7 +63,7 @@ func TestUserCreation(t *testing.T) {
 func TestGetTempDomain(t *testing.T) {
 	o := new(order)
 	o.Id = "123"
-	DOMAINSUFFIX="bsnl.online"
+	DOMAINSUFFIX = "bsnl.online"
 	o.TempDomain = "demotemp1.bsnl.online"
 	DOTOKEN = "d58c53975803d0389a78d2a647722ec850fa902e4318d1dce1e07ad3362a6b07"
 	err := setTempDomain("ozai.bsnl.online", o)
@@ -85,4 +86,13 @@ func TestNewOrderEndpoint(t *testing.T) {
 	c.Run()
 	defer e.Shutdown(context.Background())
 
+}
+
+func TestOpenFile(t *testing.T) {
+	f, err := os.OpenFile("/tmp/file2open", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		t.Error(err)
+	}
+	log.SetOutput(f)
+	log.Print("Google is making fun of us dede ded ")
 }

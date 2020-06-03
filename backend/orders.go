@@ -427,7 +427,10 @@ func getApiServer() *echo.Echo {
 
 func main() {
 	//Setting up logs
-	f, _ := os.OpenFile(path.Join(LOGGIN_DIR, "backend.log"), os.O_APPEND, 0644)
+	f, err := os.OpenFile(path.Join(LOGGIN_DIR, "backend.log"), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		panic(errors.Wrap(err, "Coudn't open logging file "))
+	}
 	defer f.Close()
 	log.SetOutput(f)
 
