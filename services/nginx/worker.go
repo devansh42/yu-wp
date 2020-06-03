@@ -193,7 +193,7 @@ func handleNewSiteOrder(o *order) {
 		}
 		f.Close()
 
-		dep := exec.Command("docker", "stack", "up", "-c", path.Join(td, "wp.yml"))
+		dep := exec.Command("docker", "stack", "up", "-c", path.Join(td, "wp.yml"), fmt.Sprint("stack_wp_", o.Id))
 		ef, _ := os.OpenFile("/var/log/wp/site/error.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 		of, _ := os.OpenFile("/var/log/wp/site/log.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 		po, _ := dep.StdoutPipe()
