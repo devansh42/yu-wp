@@ -236,14 +236,14 @@ func handleNewSiteOrder(o *order) {
 func setupNginxConf(o *order) error {
 	c, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Coudn't connect with docker daemon")
 	}
 	c.NegotiateAPIVersion(context.Background())
 	var port uint16 = 0
 	cs, err := c.ContainerList(context.Background(), types.ContainerListOptions{
 		Filters: filters.NewArgs(filters.KeyValuePair{Key: "label", Value: fmt.Sprint("oid=", o.Id)})})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Couldn't filter containers")
 	}
 
 	for _, v := range cs {
@@ -257,9 +257,10 @@ func setupNginxConf(o *order) error {
 	name := fmt.Sprint(o.Domain, ".conf")
 	fp := path.Join(NGINX_CONF, "sites-available", name)
 	f, _ := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0644)
+	defer f.Close()
 	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("wp_", o.Id, ":", port), o.Domains, o.TempDomain, o.Id})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Couldn't execute nginx template")
 	}
 	err = os.Symlink(fp, path.Join(NGINX_CONF, "conf.d", name))
 
