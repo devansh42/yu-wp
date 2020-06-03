@@ -85,6 +85,24 @@ func getRedis() *redis.Client {
 		Addr: fmt.Sprint(REDIS_HOST, ":", 6379)})
 
 }
+func createUserAndDB(tx *sql.Tx, username, passwd, dbname string) error {
+	sql := "create user '%s'@'%' identified by '%s'"
+
+	_, err := tx.Exec(fmt.Sprintf(sql, username, passwd))
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(fmt.Sprintf("create database %s", dbname))
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(fmt.Sprintf("grant all PRIVILEGES on %s.* to %s@%s", dbname, username, "%"))
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func processSiteOrder(o *order) error {
 	db, err := getDB()
@@ -94,21 +112,11 @@ func processSiteOrder(o *order) error {
 	defer db.Close()
 	//Creating db user and all
 	tx, _ := db.Begin()
-	sql := "create user '%s'@'%' identified by '%s'"
 	username := fmt.Sprint("yu_", o.Id)
 	passwd := getRandomPasswd(o)
-	_, err = tx.Exec(fmt.Sprintf(sql, username, passwd))
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
+
 	dbname := fmt.Sprint("yu_wp_user_data_", o.Id)
-	_, err = tx.Exec(fmt.Sprintf("create database %s", dbname))
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	_, err = tx.Exec(fmt.Sprintf("grant all PRIVILEGES on %s.* to %s@%s", dbname, username, "%"))
+	err = createUserAndDB(tx, username, passwd, dbname)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -291,15 +299,16 @@ func consumeRespMsg(r *responseMsg) {
 }
 
 func getNodeList() []node {
+
 	b, _ := ioutil.ReadFile(NODESFILE)
-	bb := bytes.Split(b, []byte("\n"))
 	var ns []node
-	for _, v := range bb {
+	for _, v := range bytes.Split(b, []byte("\n")) {
 		line := string(v)
 		line = strings.TrimSpace(line)
 		lp := strings.Split(line, " ")
 		ns = append(ns, node{lp[0], lp[1], lp[2]})
 	}
+
 	return ns
 }
 
@@ -347,35 +356,41 @@ func apireqSSL(e echo.Context) error {
 
 }
 
-func apinewOrder(e echo.Context) error {
-	o := new(order)
-	o.Id = e.QueryParam("id")
+func unbindRequestBody(o *order, e echo.Context) {
 	m := make(map[string]interface{})
-	if err := e.Bind(&m); err != nil {
+	if err := e.Bind(&m); err == nil {
 		o.Id = fmt.Sprint(m["id"])
-		items := m["line_items"].([]map[string]interface{})
+
+		items := m["line_items"].([]interface{})
 		for _, v := range items {
-			data := v["meta_data"].([]map[string]string)
+			vx := v.(map[string]interface{})
+			data := vx["meta_data"].([]interface{})
 			for _, vv := range data {
-				k := vv["key"]
-				vvv := vv["value"]
+				vvx := vv.(map[string]interface{})
+				k := vvx["key"]
+				vvv := vvx["value"]
 				switch k {
 				case "domain":
-					o.Domain = vvv
+					o.Domain = fmt.Sprint(vvv)
 				case "domains":
-					o.Domains = vvv
+					o.Domains = fmt.Sprint(vvv)
 				}
 			}
-			iid := fmt.Sprint(v["id"])
+			iid := fmt.Sprint(vx["id"])
 			switch iid {
-			case "beg":
+			case "0":
 				o.Plan = BEGINNER
-			case "adv":
+			case "1":
 				o.Plan = ADVANCE
 			}
 			break //As There will only be on item
 		}
 	}
+}
+
+func apinewOrder(e echo.Context) error {
+	o := new(order)
+	unbindRequestBody(o, e)
 	o.Type = SITE
 	err := processSiteOrder(o)
 	if err != nil {
@@ -388,7 +403,7 @@ func apinewOrder(e echo.Context) error {
 
 func getApiServer() *echo.Echo {
 
-	e := new(echo.Echo)
+	e := echo.New()
 	e.GET("/check/ssl", apicheckSSL)
 	e.GET("/check/site", apicheckSite)
 	e.GET("/req/ssl", apireqSSL)

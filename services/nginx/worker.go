@@ -169,7 +169,7 @@ func handleNewSiteOrder(o *order) {
 	er := func() error {
 		td, _ := ioutil.TempDir(os.TempDir(), "wpinst")
 		//Writting deployment file
-		x, _ := os.OpenFile(path.Join(td, "wp.yml"), os.O_CREATE, 0644)
+		x, _ := os.OpenFile(path.Join(td, "wp.yml"), os.O_WRONLY, 0644)
 		err := dockerTemplate.Execute(x, &ymlconf{
 			DOCKER_REG: DOCKER_REG,
 			OID:        o.Id,
@@ -180,7 +180,7 @@ func handleNewSiteOrder(o *order) {
 		x.Close()
 		//Writting env variables
 		envs := makeEnvFile(o.Wp)
-		f, _ := os.OpenFile(path.Join(td, "env.env"), os.O_CREATE, 0644)
+		f, _ := os.OpenFile(path.Join(td, "env.env"), os.O_WRONLY, 0644)
 		for _, v := range envs {
 			f.WriteString(fmt.Sprint(v, "\n"))
 		}
@@ -247,7 +247,7 @@ func setupNginxConf(o *order) error {
 	}
 	name := fmt.Sprint(o.Name, ".conf")
 	fp := path.Join(NGINX_CONF, "sites-available", name)
-	f, _ := os.OpenFile(fp, os.O_CREATE, 0644)
+	f, _ := os.OpenFile(fp, os.O_WRONLY, 0644)
 	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("wp_", o.Id, ":", port), o.Domains, o.TempDomain, o.Id})
 	if err != nil {
 		return err
@@ -259,14 +259,14 @@ func setupNginxConf(o *order) error {
 
 func initNginxTemplate() {
 	var err error
-	nginxTemplate, err = template.New("nginx").ParseFiles("nginx.conf")
+	nginxTemplate, err = template.ParseFiles("nginx.conf")
 	if err != nil {
 		panic(errors.Wrap(err, "Couldn't initalize nginx template"))
 	}
 }
 func initDockerTemplate() {
 	var err error
-	dockerTemplate, err = template.New("docker").ParseFiles("wp.yml")
+	dockerTemplate, err = template.ParseFiles("wp.yml")
 	if err != nil {
 		panic(errors.Wrap(err, "Couldn't initalize docker template"))
 	}

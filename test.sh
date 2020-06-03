@@ -1,10 +1,10 @@
 #!/bin/bash
-cat > data.json <<EOF
+cat > /tmp/data.json <<EOF
 {
-    "id":786,
+    "id":"786",
     "line_items":[
         {
-            "id":1,
+            "id":"1",
             "meta_data":[
                 {
                     "key":"domain",
@@ -21,4 +21,4 @@ cat > data.json <<EOF
 EOF
 
 
-curl -X POST -d @data.json http://localhost/orders/new
+#curl -X POST -d @data.json http://localhost/orders/new
