@@ -139,6 +139,7 @@ func handleNewSSLOrder(o *order) {
 			domains = append(domains, v)
 		}
 	}
+
 	//Preparing Reponse
 	resp := new(responseMsg)
 	resp.Id = o.Id
@@ -147,9 +148,14 @@ func handleNewSSLOrder(o *order) {
 
 	b, _ := json.Marshal(resp)
 	respCh <- b
-	dep := exec.Command("certbot", "--agree-tos", "-n", "-m", EMAIL, "--nginx", strings.Join(domains, " "))
+	var cmdargs []string
+	cmdargs = append(cmdargs, "--agree-tos", "-n", "-m", EMAIL, "--nginx")
+	cmdargs = append(cmdargs, domains...)
+	dep := exec.Command("certbot", cmdargs...)
 	ef, _ := os.OpenFile("/var/log/wp/ssl/error.log", os.O_APPEND, 0644)
 	of, _ := os.OpenFile("/var/log/wp/ssl/log.log", os.O_APPEND, 0644)
+	defer ef.Close()
+	defer of.Close()
 	po, _ := dep.StdoutPipe()
 	pe, _ := dep.StderrPipe()
 	go io.Copy(ef, pe)
