@@ -81,7 +81,7 @@ type respMsg []byte
 
 func getRedis() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr: fmt.Sprint("REDIS_HOST", ":", 6379)})
+		Addr: fmt.Sprint(REDIS_HOST, ":", 6379)})
 
 }
 func consumeRedis(r *redis.Client, wg *sync.WaitGroup) {
