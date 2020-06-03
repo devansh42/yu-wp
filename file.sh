@@ -1,7 +1,8 @@
 #!/bin/bash
+read -p "Enter OID\t" OID
 cat > /tmp/data.json <<EOF
 {
-    "id":"786",
+    "id":"$OID",
     "line_items":[
         {
             "id":"1",
