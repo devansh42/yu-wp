@@ -163,12 +163,13 @@ func handleNewSSLOrder(o *order) {
 	err := dep.Run()
 	if err != nil {
 		resp.Status = 2
+		log.Print(errors.Wrap(err, "Coudn't process ssl order"), *o, string(b))
 	} else {
 		resp.Status = 3
 	}
 	b, _ = json.Marshal(resp)
 	respCh <- b
-	log.Print(err, string(b))
+
 }
 
 func handleNewSiteOrder(o *order) {
@@ -225,6 +226,7 @@ func handleNewSiteOrder(o *order) {
 	resp.Status = 1 //For Safe state
 	if er != nil {
 		resp.Status = 2
+		log.Print(errors.Wrap(er, "Couldn't process order ,"), *o)
 	}
 	b, _ := json.Marshal(resp)
 	respCh <- b
