@@ -95,3 +95,7 @@ func TestOpenFile(t *testing.T) {
 	log.SetOutput(f)
 	log.Print("Google is making fun of us dede ded ")
 }
+
+func TestGetRandomString(t *testing.T) {
+	t.Log(len(getRandomString(&order{Id: "eded"}, 5)))
+}

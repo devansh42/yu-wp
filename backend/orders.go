@@ -148,12 +148,12 @@ func processSiteOrder(o *order) (string, error) {
 		tx.Rollback()
 		return "", errors.Wrap(err, "Couldn't set temporaray domain name")
 	}
-	stmt, err := tx.Prepare("insert into orders(oid,nid,temp_domain,otype,domain,domains)values(?,?,?,?,?)")
+	stmt, err := tx.Prepare("insert into orders(oid,nid,temp_domain,otype,domain,domains)values(?,?,?,?,?,?)")
 	if err != nil {
 		tx.Rollback()
 		return "", err
 	}
-	_, err = stmt.Exec(o.Id, node.Hostname, o.TempDomain, o.Domain, o.Type, o.Domain, o.Domains)
+	_, err = stmt.Exec(o.Id, node.Hostname, o.TempDomain, o.Type, o.Domain, o.Domains)
 	if err != nil {
 		tx.Rollback()
 		return "", err
@@ -226,7 +226,7 @@ func checkSiteStatus(o *order) (int, error) {
 }
 
 func getRandomString(o *order, round int) string {
-	n := sha256.New()
+	n := md5.New()
 	b := n.Sum([]byte(fmt.Sprintf(o.Id, time.Now().UnixNano())))
 	for i := 0; i < round; i++ {
 		b = n.Sum(b)
