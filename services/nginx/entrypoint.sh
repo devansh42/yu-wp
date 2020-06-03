@@ -6,7 +6,7 @@ echo "Registering Backup Cron Job"
 # Registering backup cron job
 bash backup/cron-wp.sh
 
-nginx -g "daemon off;" # Starting up nginx
-echo "Started nginx"
+#nginx -g "daemon off;" # Starting up nginx
+#echo "Started nginx"
 # Running Worker 
 /worker/worker > /var/log/wp/log.log 2>&1
