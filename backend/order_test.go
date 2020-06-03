@@ -59,6 +59,19 @@ func TestUserCreation(t *testing.T) {
 	tx.Commit()
 }
 
+func TesGetTempDomain(t *testing.T) {
+	o := new(order)
+	o.Id = "123"
+
+	o.TempDomain = "demotemp.bsnl.online"
+	DOTOKEN = "DOTOKEN"
+	err := setTempDomain("ozai.bsnl.online", o)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log("Success")
+}
+
 func TestNewOrderEndpoint(t *testing.T) {
 	e := getApiServer()
 	e.POST("/test", func(c echo.Context) error {

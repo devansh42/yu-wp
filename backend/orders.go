@@ -104,10 +104,11 @@ func createUserAndDB(tx *sql.Tx, username, passwd, dbname string) error {
 	return nil
 }
 
-func processSiteOrder(o *order) error {
+func processSiteOrder(o *order) (string, error) {
 	db, err := getDB()
+
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer db.Close()
 	//Creating db user and all
@@ -119,7 +120,7 @@ func processSiteOrder(o *order) error {
 	err = createUserAndDB(tx, username, passwd, dbname)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return "", err
 	}
 	node := getNextNode()
 	o.Wp = map[string]string{
@@ -138,23 +139,29 @@ func processSiteOrder(o *order) error {
 		"OID":                        o.Id,
 		"NODEID":                     node.Hostname}
 	o.TempDomain = getTempDomain(o, node.Domain)
+	err = setTempDomain(node.Domain, o)
+	if err != nil {
+		tx.Rollback()
+		return "", errors.Wrap(err, "Couldn't set temporaray domain name")
+	}
 	stmt, err := tx.Prepare("insert into orders(oid,nid,temp_domain,otype,domain,domains)values(?,?,?,?,?)")
 	if err != nil {
 		tx.Rollback()
-		return err
+		return "", err
 	}
 	_, err = stmt.Exec(o.Id, node.Hostname, o.TempDomain, o.Domain, o.Type, o.Domain, o.Domains)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return "", err
 	}
 	chOrderProcess <- orderMsg{&node, o} //Sending for order processing
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback()
-		return errors.Wrapf(err, "Couldn't commit tx: order id  %s", o.Id)
+		return "", errors.Wrapf(err, "Couldn't commit tx: order id  %s", o.Id)
 	}
-	return nil
+
+	return node.Domain, nil
 }
 
 func processSSLOrder(o *order) error {
@@ -234,11 +241,11 @@ func getTempDomain(o *order, dom string) string {
 	return strings.Join([]string{sub, DOMAINSUFFIX}, ".")
 }
 
-func setTempDomain(td, dom string, o *order) error {
+func setTempDomain(dom string, o *order) error {
 	c := godo.NewFromToken(DOTOKEN)
 	x := new(godo.DomainRecordEditRequest)
 	x.Type = "CNAME"
-	x.Name = td
+	x.Name = strings.Split(o.TempDomain, " ")[0]
 	x.Data = dom
 	_, _, err := c.Domains.CreateRecord(context.Background(), DOMAINSUFFIX, x)
 	return err
@@ -392,12 +399,14 @@ func apinewOrder(e echo.Context) error {
 	o := new(order)
 	unbindRequestBody(o, e)
 	o.Type = SITE
-	err := processSiteOrder(o)
+	domain, err := processSiteOrder(o)
 	if err != nil {
 		log.Print("/order/new\t", err, *o)
 		return e.String(500, "Internal server error")
 	}
-	return e.String(200, "ok")
+	return e.JSON(200, map[string]interface{}{
+		"cname":       domain,
+		"temp_domain": o.TempDomain})
 
 }
 
