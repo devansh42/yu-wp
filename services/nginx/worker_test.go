@@ -34,9 +34,10 @@ func TestDockerTemplate(t *testing.T) {
 }
 
 func TestContainerListing(t *testing.T) {
-	c := exec.Command("docker", "run", "-d", "--label name=devansh42", "nginx:alpine")
-	err:=c.Run()
-	if err!=nil{
+	c := exec.Command("docker", "run", "-d", "--label", "name=devansh42", "nginx:alpine")
+	err := c.Run()
+	if err != nil {
+
 		t.Error(err)
 	}
 	cli, _ := client.NewEnvClient()
