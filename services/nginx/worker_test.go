@@ -15,9 +15,14 @@ import (
 
 func TestNginxTemplate(t *testing.T) {
 	initNginxTemplate()
-	x := map[string]interface{}{"OID": 786, "BindAddr": "localhost:8080", "ServerNames": "www.google.com www.facebook.com", "TempName": "temp.bsnl.online"}
+	// y := new(nginxconf)
+	// y.BindAddr = "localhost:8080"
+	// y.ServerNames = "bla de deded"
+	// y.TempName = "deded"
+	// y.OID = "786"
+	//	x := map[string]interface{}{"OID": 786, "BindAddr": "localhost:8080", "ServerNames": "www.google.com www.facebook.com", "TempName": "temp.bsnl.online"}
 	b := new(bytes.Buffer)
-	nginxTemplate.Execute(b, &x)
+	nginxTemplate.Execute(b, &nginxconf{"deed", "dedede", "deded", "eded"})
 	t.Log(string(b.Bytes()))
 }
 

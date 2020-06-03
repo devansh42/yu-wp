@@ -256,7 +256,10 @@ func setupNginxConf(o *order) error {
 	}
 	name := fmt.Sprint(o.Domain, ".conf")
 	fp := path.Join(NGINX_CONF, "sites-available", name)
-	f, _ := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0644)
+	f, err := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return errors.Wrap(err, "Couldn't make nginx conf file")
+	}
 	defer f.Close()
 	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("wp_", o.Id, ":", port), o.Domains, o.TempDomain, o.Id})
 	if err != nil {
