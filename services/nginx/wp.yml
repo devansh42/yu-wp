@@ -8,7 +8,7 @@ services:
         networks:
             - wp_overlay
         ports: 
-            - "0:80" # Random Port Choosen by system
+            - "0:9000" # Random Port Choosen by system
         hostname: "wp_{{.OID}}" # For network lookup    
         volumes: 
             - wp-content:/var/www/html 
