@@ -97,5 +97,5 @@ func TestOpenFile(t *testing.T) {
 }
 
 func TestGetRandomString(t *testing.T) {
-	t.Log(len(getRandomString(&order{Id: "eded"}, 5)))
+	t.Log((getRandomString(&order{Id: "eded"}, 5)))
 }

@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/md5"
 	"database/sql"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -229,7 +230,8 @@ func getRandomString(o *order, round int) string {
 	for i := 0; i < round; i++ {
 		b = n.Sum(b)
 	}
-	return hex.EncodeToString(b)
+	x := base64.StdEncoding
+	return x.EncodeToString(b)
 }
 
 func getRandomPasswd(o *order) string {
