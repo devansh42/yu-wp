@@ -12,7 +12,7 @@ services:
         hostname: "wp-{{.OID}}" # For network lookup    
         volumes: 
             - wp-content:/var/www/{{.OID}}/html 
-            - wps_data:/var/www/{{.OID}} # This mount point to used for backup purposes
+            - wps_data:/var/www # This mount point to used for backup purposes
         deploy: 
             resources:
                 limits:
