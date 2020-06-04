@@ -26,12 +26,11 @@ services:
         volumes: 
             - conf:/etc/nginx
             - logs:/var/log
-            - wp:/var/wp
+            
             - /var/run/docker.sock:/var/run/docker.sock  #Docker Related stuff
             - certs:/var/letsencrypt
             - wps_data:/var/wp/html
 volumes: 
-    wp:
     conf:    
     logs: # For logs
     certs:          # For Let'sEncrypt Certificates
