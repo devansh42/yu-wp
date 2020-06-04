@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"context"
 	"crypto/md5"
-	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
@@ -239,9 +238,7 @@ func getRandomPasswd(o *order) string {
 }
 
 func getTempDomain(o *order, dom string) string {
-	n := sha256.New()
-	sub := hex.EncodeToString(n.Sum([]byte(fmt.Sprint(o.Id, dom))))[:6] //First 6 Character
-	return strings.Join([]string{sub, DOMAINSUFFIX}, ".")
+	return strings.Join([]string{fmt.Sprint("o", o.Id), dom}, ".")
 }
 
 func setTempDomain(dom string, o *order) error {
