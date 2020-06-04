@@ -1,3 +1,3 @@
 #!/bin/bash
 ln -s /var/www/html /wp/link/$OID
-php-fpm
+docker-entrypoint.sh php-fpm # Docker entrypoint 
