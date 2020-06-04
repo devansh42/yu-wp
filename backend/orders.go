@@ -245,7 +245,7 @@ func setTempDomain(dom string, o *order) error {
 	c := godo.NewFromToken(DOTOKEN)
 	x := new(godo.DomainRecordEditRequest)
 	x.Type = "CNAME"
-	x.Name = strings.Split(o.TempDomain, ".")[0]
+	x.Name = strings.Join(strings.Split(o.TempDomain, ".")[:2], ".")
 	x.Data = fmt.Sprint(dom, ".") // Appending dot for cname record
 	_, _, err := c.Domains.CreateRecord(context.Background(), DOMAINSUFFIX, x)
 	return err
