@@ -3,4 +3,5 @@ RUN apk update && apk add bash
 RUN mkdir -p /wp/link 
 ENTRYPOINT ["bash","entrypoint.sh"]
 COPY entrypoint.sh entrypoint.sh
+USER www-data
 # For sharebale mount point
