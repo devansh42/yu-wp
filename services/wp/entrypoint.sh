@@ -1,4 +1,4 @@
 #!/bin/bash
-ln -s /var/www/html /wp/link/$OID 
-cd /var/www/html
+mkdir -p /var/www/$OID/html 
+cd /var/www/$OID/html
 docker-entrypoint.sh php-fpm # Docker entrypoint 
