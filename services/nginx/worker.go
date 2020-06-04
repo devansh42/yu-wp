@@ -266,7 +266,12 @@ func setupNginxConf(o *order) error {
 	if err != nil {
 		return errors.Wrap(err, "Couldn't execute nginx template")
 	}
-	err = os.Symlink(fp, path.Join(NGINX_CONF, "conf.d", name))
+	linkname := path.Join(NGINX_CONF, "conf.d", name)
+	if _, err = os.Stat(linkname); err != nil && os.IsNotExist(err) {
+		//We only make sym link if it doesn't exists before
+		err = os.Symlink(fp, linkname)
+
+	}
 
 	return err
 }
