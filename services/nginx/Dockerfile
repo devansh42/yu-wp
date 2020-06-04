@@ -14,7 +14,7 @@ RUN mkdir /etc/nginx/sites-available
 WORKDIR /worker
 COPY --from=build /worker/bin/worker /worker/worker
 ADD . .
-RUN mkdir -p /var/wp/html /var/log/wp/site /var/log/wp/ssl
+RUN mkdir -p /var/log/wp/site /var/log/wp/ssl
 
 ENTRYPOINT [ "bash","entrypoint.sh" ]
 
