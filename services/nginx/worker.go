@@ -262,7 +262,7 @@ func setupNginxConf(o *order) error {
 	}
 	defer f.Close()
 	fmt.Print(port)
-	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("stack_wp", o.Id, "_wordpress:", "9000"), o.Domains, o.TempDomain, o.Id})
+	err = nginxTemplate.Execute(f, &nginxconf{fmt.Sprint("stack_wp_", o.Id, "_wordpress:", "9000"), o.Domains, o.TempDomain, o.Id})
 	if err != nil {
 		return errors.Wrap(err, "Couldn't execute nginx template")
 	}
