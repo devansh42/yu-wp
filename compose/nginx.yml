@@ -3,7 +3,10 @@ version: "3.7"
 services: 
     nginx:
         ports:
-            - "80:80"
+            - target: 80
+              published: 80
+              protocol: tcp
+              mode: host  
         deploy:
             placement:
               constraints:

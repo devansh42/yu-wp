@@ -3,7 +3,10 @@ services:
     backend:
         image: ${DOCKER_REG}/yu_wp:backend
         ports: 
-            - "80:80"
+            - target: 80
+              published: 80
+              protocol: tcp
+              mode: host  
         env_file: env/backend.env    
         volumes:
             - log:/var/log    
