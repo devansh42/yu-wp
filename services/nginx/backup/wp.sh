@@ -14,5 +14,5 @@ backup() {
 }
 
 while IFS= read -r line; do
-    backup /var/wp/html/$line $line
+    backup /var/wp/html/$line/html $line
 done <$1
