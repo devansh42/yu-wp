@@ -40,6 +40,14 @@ case $1 in
     askoid
     curl -v http://localhost/req/ssl?id=$OID
     ;;
+"csite")
+    askoid
+    curl -v http://localhost/check/site?id=$OID
+    ;;
+"cssl")
+    askoid
+    curl -v http://localhost/check/ssl?id=$OID
+    ;;
 *)
     echo "Not a valid option, try 'o' and 's' "
     ;;
