@@ -1,3 +1,5 @@
 #!/bin/bash
-cd /var/www/html
+mkdir -p /var/www/$OID/html
+chown -R www-data:www-data /var/www/$OID
+cd /var/www/$OID/html
 docker-entrypoint.sh php-fpm # Docker entrypoint 
