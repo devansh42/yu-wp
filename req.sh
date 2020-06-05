@@ -39,6 +39,9 @@ case $1 in
 "s")
     askoid
     curl -v http://localhost/req/ssl?id=$OID
- ;;
+    ;;
+*)
+    echo "Not a valid option, try 'o' and 's' "
+    ;;
 
 esac
