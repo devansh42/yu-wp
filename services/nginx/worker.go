@@ -96,7 +96,7 @@ func responseConsumer(c *redis.Client, r <-chan respMsg, wg *sync.WaitGroup) {
 	defer wg.Done()
 	con := context.Background()
 	for v := range r {
-		c.Publish(con, RESPONSECH, v)
+		c.Publish(con, RESPONSECH, string(v))
 	}
 }
 

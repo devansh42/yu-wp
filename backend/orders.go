@@ -302,6 +302,7 @@ func consumeRespMsg(r *responseMsg) {
 		}
 		err = tx.Commit()
 		if err != nil {
+			tx.Rollback()
 			return err
 		}
 		return nil
