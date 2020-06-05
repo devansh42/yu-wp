@@ -173,7 +173,10 @@ func processSSLOrder(o *order) error {
 		return err
 	}
 	defer db.Close()
-	stmt, _ := db.Prepare("select domain,domains,temp_domain,nid from orders where oid=? limit 1")
+	stmt, err := db.Prepare("select domain,domains,temp_domain,nid from orders where oid=? limit 1")
+	if err != nil {
+		return err
+	}
 	defer stmt.Close()
 	rs, err := stmt.Query(o.Id)
 	if err != nil {
@@ -182,7 +185,7 @@ func processSSLOrder(o *order) error {
 	defer rs.Close()
 	for rs.Next() {
 		var h string
-		rs.Scan(&o.Domain, o.Domains, o.TempDomain, &h)
+		rs.Scan(&o.Domain, &o.Domains, &o.TempDomain, &h)
 		chOrderProcess <- orderMsg{&node{Hostname: h}, o} //Sending order for processing
 	}
 	return nil
