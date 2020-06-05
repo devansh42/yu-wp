@@ -196,6 +196,8 @@ func handleNewSiteOrder(o *order) {
 		dep := exec.Command("docker", "stack", "up", "-c", path.Join(td, "wp.yml"), fmt.Sprint("stack_wp_", o.Id))
 		ef, _ := os.OpenFile("/var/log/wp/site/error.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 		of, _ := os.OpenFile("/var/log/wp/site/log.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		defer ef.Close()
+		defer of.Close()
 		po, _ := dep.StdoutPipe()
 		pe, _ := dep.StderrPipe()
 		go io.Copy(ef, pe)
@@ -209,7 +211,12 @@ func handleNewSiteOrder(o *order) {
 			return errors.Wrapf(err, "Couldn't make nginx confile for order id %s", o.Id)
 		}
 		//Reloading nginx
-		err = exec.Command("nginx", "-s", "reload").Run()
+		dep = exec.Command("nginx", "-s", "reload")
+		po, _ = dep.StdoutPipe()
+		pe, _ = dep.StderrPipe()
+		go io.Copy(ef, pe)
+		go io.Copy(of, po)
+		err = dep.Run()
 		if err != nil {
 			return err
 		}
