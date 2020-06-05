@@ -13,6 +13,7 @@ import (
 	"path"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/docker/docker/api/types/filters"
 
@@ -211,19 +212,23 @@ func handleNewSiteOrder(o *order) {
 			return errors.Wrapf(err, "Couldn't make nginx confile for order id %s", o.Id)
 		}
 		//Reloading nginx
-		dep = exec.Command("nginx", "-s", "reload")
-		po, _ = dep.StdoutPipe()
-		pe, _ = dep.StderrPipe()
-		go io.Copy(ef, pe)
-		go io.Copy(of, po)
-		err = dep.Run()
-		if err != nil {
-			return err
-		}
+		ch := make(chan error)
+		go func(chh chan<- error) {
+			time.Sleep(20 * time.Second) //Wait for 20 secs
+			dep = exec.Command("nginx", "-s", "reload")
+			po, _ = dep.StdoutPipe()
+			pe, _ = dep.StderrPipe()
+			go io.Copy(ef, pe)
+			go io.Copy(of, po)
+
+			chh <- dep.Run()
+
+		}(ch)
+
 		if o.Plan == ADVANCE {
 			enableBackup(o)
 		}
-		return nil
+		return <-ch //Blocked for nginx reload
 
 	}()
 	//Sending Response Message
