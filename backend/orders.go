@@ -186,6 +186,7 @@ func processSSLOrder(o *order) error {
 	for rs.Next() {
 		var h string
 		rs.Scan(&o.Domain, &o.Domains, &o.TempDomain, &h)
+		o.Type = SSL
 		chOrderProcess <- orderMsg{&node{Hostname: h}, o} //Sending order for processing
 	}
 	return nil
