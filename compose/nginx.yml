@@ -7,6 +7,10 @@ services:
               published: 80
               protocol: tcp
               mode: host  
+            - target: 443
+              published: 443
+              protocol: tcp
+              mode: host    
         deploy:
             placement:
               constraints:
@@ -28,7 +32,7 @@ services:
             - logs:/var/log
             
             - /var/run/docker.sock:/var/run/docker.sock  #Docker Related stuff
-            - certs:/var/letsencrypt
+            - certs:/etc/letsencrypt
             - wps_data:/var/www:ro
 volumes: 
     conf:    
