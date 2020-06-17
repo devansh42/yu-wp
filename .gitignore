@@ -1,2 +1,5 @@
 manager.env
 venv
+/services/php/wordpress
+/services/php/vendor
+/services/php/wp-content

@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"path"
 	"strings"
@@ -192,40 +193,48 @@ func processSSLOrder(o *order) error {
 	return nil
 }
 
-func checkStatus(o *order, t otype) (int, error) {
+func checkStatus(o *order, t otype) (int, string, string, string, error) {
+	var tempDomain, domain, domains string
 
 	db, err := getDB()
 	if err != nil {
-		return 500, err
+		return 500, "", "", "", err
 	}
 	defer db.Close()
 
-	sql := "select site_status from orders where oid=? limit 1"
+	sql := "select site_status,temp_domain,domains,domain from orders where oid=? limit 1"
 	if t == SSL {
 		sql = "select ssl_status from orders where oid=? limit 1"
 	}
 	stmt, err := db.Prepare(sql)
 	if err != nil {
-		return 500, err
+		return 500, "", "", "", err
 	}
 	defer stmt.Close()
 	r, err := stmt.Query(o.Id)
 	if err != nil {
-		return 500, err
+		return 500, "", "", "", err
 	}
 	var status int
 	for r.Next() {
-		r.Scan(&status)
+		if t == SITE {
+			r.Scan(&status, &tempDomain, &domains, &domain)
+		} else {
+			r.Scan(&status)
+
+		}
 		break
 	}
-	return status, nil
+	return status, tempDomain, domains, domain, nil
 
 }
 func checkSSLStatus(o *order) (int, error) {
-	return checkStatus(o, SSL)
+	s, _, _, _, err := checkStatus(o, SSL)
+	return s, err
 }
-func checkSiteStatus(o *order) (int, error) {
+func checkSiteStatus(o *order) (int, string, string, string, error) {
 	return checkStatus(o, SITE)
+
 }
 
 func getRandomString(o *order, round int) string {
@@ -338,6 +347,14 @@ func getNextNode() node {
 	return n
 }
 
+/*
+*
+* ssl_status have either of 3 values
+ 0 Cert not requested yet
+ 1 Cert requested
+ 2 Cert Issued
+ 3 Cert Couldn't Issued
+*/
 func apicheckSSL(e echo.Context) error {
 	o := new(order)
 	o.Id = e.QueryParam("id")
@@ -348,17 +365,38 @@ func apicheckSSL(e echo.Context) error {
 	}
 	return e.JSON(200, map[string]interface{}{"status": status})
 }
+
+/**
+ Site Status have these states
+ 0 Site is not provisioned yet
+ 1 Site is provisioned successfully
+ 2 Couldn't Provision site due to error
+**/
 func apicheckSite(e echo.Context) error {
 	o := new(order)
 	o.Id = e.QueryParam("id")
-	status, err := checkSiteStatus(o)
+	status, tempdomain, domains, domain, err := checkSiteStatus(o)
+	ips, err := net.LookupIP(tempdomain)
+	if err != nil {
+		err = errors.Wrap(err, "Couldn't lookup ip address")
+	}
 	if err != nil {
 		log.Print("/check/site\t", err, *o)
 		return e.String(500, "Internal server error")
 	}
-	return e.JSON(200,
-		map[string]interface{}{"status": status})
 
+	return e.JSON(200,
+		map[string]interface{}{"status": status,
+			"ips":        convertIP2String(ips),
+			"tempDomain": tempdomain, "domain": domain, "domains": strings.Split(domains, ",")})
+
+}
+func convertIP2String(a []net.IP) []string {
+	var x []string
+	for _, v := range a {
+		x = append(x, v.String())
+	}
+	return x
 }
 func apireqSSL(e echo.Context) error {
 	o := new(order)

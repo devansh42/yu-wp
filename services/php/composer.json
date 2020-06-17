@@ -1,0 +1,7 @@
+{
+    "require": {
+        "johnpbloch/wordpress":"*",
+        "woocommerce/woocommerce":"*",
+        "automattic/woocommerce":"*"
+    }
+}
